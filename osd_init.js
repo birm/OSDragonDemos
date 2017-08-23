@@ -1,5 +1,5 @@
-var prefixurl = "img/duomo_files/";
-var tilesources = "img/duomo_files/"
+var prefixurl = "https://cdn.jsdelivr.net/npm/openseadragon@2.3/build/openseadragon/images/";
+var tilesources = "./img/duomo.dzi"
 var viewer1 = OpenSeadragon({
   id: "first",
   prefixUrl: prefixurl,
