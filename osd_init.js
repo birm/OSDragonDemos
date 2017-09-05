@@ -10,13 +10,3 @@ var viewer2 = OpenSeadragon({
   prefixUrl: prefixurl,
   tileSources: tilesources
 });
-var viewer3 = OpenSeadragon({
-  id: "third",
-  prefixUrl: prefixurl,
-  tileSources: tilesources
-});
-var viewer4 = OpenSeadragon({
-  id: "fourth",
-  prefixUrl: prefixurl,
-  tileSources: tilesources
-});
