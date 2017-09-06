@@ -4,7 +4,9 @@ var prev_zoom = viewer1.viewport.getZoom();
 
 function pan_diff(e){
   // pan second image by amount first panned by
-  var dest_point = new OpenSeadragon.Point(viewer2.viewport.getCenter().x + (e.center.x - prev_point.x), viewer2.viewport.getCenter().y + (e.center.y - prev_point.y));
+  var del_x = e.center.x - prev_point.x;
+  var del_y = e.center.y - prev_point.y;
+  var dest_point = new OpenSeadragon.Point(viewer2.viewport.getCenter().x + del_x, viewer2.viewport.getCenter().y + del_y);
   // this is the new "previous" for next time
   viewer2.viewport.panTo(dest_point);
   prev_point = e.center;
@@ -16,10 +18,11 @@ function zoom_diff(e){
   if (new_zoom <=0.1){
     new_zoom = 0.1
   }
-  viewer2.viewport.zoomTo(new_zoom);
+  viewer2.viewport.zoomTo(new_zoom, e.refPoint);
   // this is the new "previous" for next time
-  console.log(new_zoom);
+  console.log(e.refPoint);
   prev_zoom = e.zoom;
+  prev_point = viewer1.viewport.getCenter();
 }
 
 //register to viewer1
