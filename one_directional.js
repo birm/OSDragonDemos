@@ -1,3 +1,16 @@
+var prefixurl = "https://cdn.jsdelivr.net/npm/openseadragon@2.3/build/openseadragon/images/";
+var tilesources = "./img/duomo.dzi"
+var viewer1 = OpenSeadragon({
+  id: "first",
+  prefixUrl: prefixurl,
+  tileSources: tilesources
+});
+var viewer2 = OpenSeadragon({
+  id: "second",
+  prefixUrl: prefixurl,
+  tileSources: tilesources
+});
+
 // get initial zoom and point on load
 var prev_point = viewer1.viewport.getCenter();
 var prev_zoom = viewer1.viewport.getZoom();
