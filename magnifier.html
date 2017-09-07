@@ -8,8 +8,13 @@
   </div>
   <div id="about"></div>
   <div id="windows">
-    <div id="mag" style="width: 400px; height: 400px;"></div>
+    <div id="first" style="width: 400px; height: 400px;"></div>
   </div>
-  <script src="magnifier.js"></script>
+  <script src="one_init.js"></script>
+  <script src="packages/magnifier.js"></script>
+  <script>
+    var mag = new magnifier(viewer);
+    window.setTimeout(mag.register,500);
+  </script>
 </body>
 </html>

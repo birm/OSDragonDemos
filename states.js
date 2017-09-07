@@ -36,8 +36,13 @@ class OsdStateManager {
         }
     }
     register(){
-      viewer.addHandler("zoom", StateMan.getState);
-      viewer.addHandler("pan", StateMan.getState);
+      var self = this;
+      function addGetState(){
+        viewer.addHandler("zoom", self.getState);
+        viewer.addHandler("pan", self.getState);
+      }
+      setTimeout(self.setState, 100);
+      setTimeout(addGetState, 500);
     }
 }
 var prefixurl = "https://cdn.jsdelivr.net/npm/openseadragon@2.3/build/openseadragon/images/";
@@ -49,5 +54,4 @@ var viewer = OpenSeadragon({
 });
 
 var StateMan = new OsdStateManager(viewer, {});
-setTimeout(StateMan.setState, 100);
-setTimeout(StateMan.register, 500);
+StateMan.register();
