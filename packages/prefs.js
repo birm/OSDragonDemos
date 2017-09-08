@@ -1,11 +1,3 @@
-var prefixurl = "https://cdn.jsdelivr.net/npm/openseadragon@2.3/build/openseadragon/images/";
-var tilesources = "./img/duomo.dzi"
-var viewer = OpenSeadragon({
-    id: "prefs",
-    prefixUrl: prefixurl,
-    tileSources: tilesources
-});
-
 // Work with a client database to store and get values
 class ClientPrefManager {
     constructor(schema) {

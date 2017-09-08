@@ -10,7 +10,11 @@
   <div id="windows">
     <div id="first" style="width: 400px; height: 400px;"></div>
   </div>
-  <script src="magnifier.js"></script>
-  <script src="states.js"></script>
+  <script src="one_init.js"></script>
+  <script src="packages/states.js"></script>
+  <script>
+    var StateMan = new OsdStateManager(viewer, {});
+    StateMan.register();
+  </script>
 </body>
 </html>

@@ -37,7 +37,9 @@ class OsdStateManager {
     }
     register(){
       var self = this;
+      console.log("begun");
       function addGetState(){
+        console.log(self.getState)
         viewer.addHandler("zoom", self.getState);
         viewer.addHandler("pan", self.getState);
       }
@@ -45,13 +47,3 @@ class OsdStateManager {
       setTimeout(addGetState, 500);
     }
 }
-var prefixurl = "https://cdn.jsdelivr.net/npm/openseadragon@2.3/build/openseadragon/images/";
-var tilesources = "./img/duomo.dzi"
-var viewer = OpenSeadragon({
-    id: "first",
-    prefixUrl: prefixurl,
-    tileSources: tilesources
-});
-
-var StateMan = new OsdStateManager(viewer, {});
-StateMan.register();

@@ -13,8 +13,10 @@
   <script src="one_init.js"></script>
   <script src="packages/magnifier.js"></script>
   <script>
-    var mag = new magnifier(viewer);
-    window.setTimeout(mag.register,500);
+    function register_mag(){
+      magnifier(viewer);
+    }
+    window.setTimeout(register_mag,500);
   </script>
 </body>
 </html>

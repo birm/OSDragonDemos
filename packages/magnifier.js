@@ -1,11 +1,7 @@
-class magnifier {
-    constructor(viewer) {
-        this.viewer = viewer;
-        this.maginfies = "";
-    }
-
-    register(){
-      var self = this;
+function magnifier(viewer) {
+    // return a callback
+    return function(){
+      maginfies = "";
       function start_magnifier() {
           // short hash of time to get magnifies client id, avoid collision
           // THIS IS NOT A SECURE HASH FUNCTION, just to avoid collision
@@ -17,14 +13,14 @@ class magnifier {
               hash = hash & hash; // Convert to 32bit integer
               hash = Math.abs(hash);
           }
-          self.magnifies = hash.toString().substring(0, 3);
+          magnifies = hash.toString().substring(0, 3);
           // make the url with this magnifies id
           var previous = location.search.substring(1);
           var p_var = previous ? JSON.parse('{"' + previous.replace(/&/g, '","').replace(/=/g, '":"') + '"}',
               function(key, value) {
                   return key === "" ? value : decodeURIComponent(value)
               }) : {}
-          p_var['magnifies'] = self.magnifies;
+          p_var['magnifies'] = magnifies;
           var params = Object.keys(p_var).map((i) => i + '=' + p_var[i]).join('&');
           // OPEN THIS LINK, set window size default
           var new_url = [location.protocol, '//', location.host, location.pathname].join('');
@@ -39,7 +35,7 @@ class magnifier {
               moveHandler: function(e) {
                   var pt = viewer.viewport.pointFromPixel(e.position);
                   var point_str = pt.x + "," + pt.y;
-                  window.localStorage.setItem(self.magnifies, point_str);
+                  window.localStorage.setItem(magnifies, point_str);
               }
           });
           tracker.setTracking(true);
@@ -52,7 +48,7 @@ class magnifier {
           if (matches.length > 1) {
               var lookup = matches[1];
               // this is a zoomed window, so zoom
-              self.viewer.viewport.zoomTo(viewer.viewport.getMaxZoom());
+              viewer.viewport.zoomTo(viewer.viewport.getMaxZoom());
               // hide the help text
               document.getElementById("head").style.display = 'none';
               // listen for changes to storage and move x and y when localstorage[match]
@@ -70,5 +66,6 @@ class magnifier {
           }
       }
       mag_setup();
-  }
+    }
+
 }

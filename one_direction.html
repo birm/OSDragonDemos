@@ -16,8 +16,7 @@
   <script>
   function registry(){
     function registry1(){
-      var oned = new oneDirection(viewer1, viewer2);
-      oned.register();
+      oneDirection(viewer1, viewer2);
     }
     viewer2.addHandler("open", registry1);
   }
