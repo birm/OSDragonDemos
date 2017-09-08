@@ -14,13 +14,7 @@
   <script src="two_init.js"></script>
   <script src="packages/oneDirection.js"></script>
   <script>
-  function registry(){
-    function registry1(){
-      oneDirection(viewer1, viewer2);
-    }
-    viewer2.addHandler("open", registry1);
-  }
-    viewer1.addHandler("open", registry);
+  window.setTimeout(oneDirection(viewer1, viewer2),500);
   </script>
 </body>
 </html>

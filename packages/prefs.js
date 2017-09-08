@@ -1,4 +1,4 @@
-// Work with a client database to store and get values
+/* Work with a client database to store and get values */
 class ClientPrefManager {
     constructor(schema) {
         this.schema = schema;
@@ -21,6 +21,10 @@ class ClientPrefManager {
         }
     }
     set_pref(pref, val) {
+        /* Set a preference for pesistence
+         * @param {string} pref - The key to store as
+         * @param {string} val - the value to store as pref
+         */
         var request = indexedDB.open(this.schema);
 
         request.onsuccess = function(e) {
@@ -42,6 +46,10 @@ class ClientPrefManager {
         };
     }
     get_pref(pref, cb) {
+        /* Set a preference for pesistence
+         * @param {string} pref - The key to search
+         * @param {function} cv - the callback called with fetched value
+         */
         var request = indexedDB.open(this.schema);
         request.onsuccess = function(e) {
             var idb = e.target.result;

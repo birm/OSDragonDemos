@@ -1,3 +1,4 @@
+/* Use URLs to hold encoded string info with viewer state */
 class OsdStateManager {
     constructor(viewer, options) {
         this.animateWaitTime = options.animateWaitTime || 300
@@ -6,6 +7,7 @@ class OsdStateManager {
     }
 
     getState() {
+        /* Get the current state, encode it (base64) and put it in the url */
         var pt = viewer.viewport.getCenter(true);
         var xi = pt.x;
         var yi = pt.y;
@@ -19,9 +21,7 @@ class OsdStateManager {
     }
 
     setState() {
-        //TODO some error handling
-        // handle improper encoding gracefully
-        // handle missing field in json gracefully
+        /* Set the viewer state from the url */
         var matches = /state=([^&#=]*)/.exec(window.location.search);
         matches = matches || [];
         if (matches.length >= 2) {
@@ -35,15 +35,17 @@ class OsdStateManager {
             }
         }
     }
-    register(){
-      var self = this;
-      console.log("begun");
-      function addGetState(){
-        console.log(self.getState)
-        viewer.addHandler("zoom", self.getState);
-        viewer.addHandler("pan", self.getState);
-      }
-      setTimeout(self.setState, 100);
-      setTimeout(addGetState, 500);
+    register() {
+        /* Register the state manager to the viewer */
+        var self = this;
+        console.log("begun");
+
+        function addGetState() {
+            console.log(self.getState)
+            viewer.addHandler("zoom", self.getState);
+            viewer.addHandler("pan", self.getState);
+        }
+        setTimeout(self.setState, 100);
+        setTimeout(addGetState, 500);
     }
 }
