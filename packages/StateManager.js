@@ -56,8 +56,7 @@ class StateManager {
     }
 
     /* run all set functions based on the url and registry */
-    initialize() {
-        var state = this.decode(this.get_url_state());
+    initialize(state) {
         for (var i in state) {
             if (i in this.getters) {
                 this.getters[i](state[i]);
