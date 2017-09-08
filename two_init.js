@@ -5,3 +5,8 @@ var viewer1 = OpenSeadragon({
   prefixUrl: prefixurl,
   tileSources: tilesources
 });
+var viewer2 = OpenSeadragon({
+  id: "second",
+  prefixUrl: prefixurl,
+  tileSources: tilesources
+});
