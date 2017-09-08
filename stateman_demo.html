@@ -1,0 +1,16 @@
+<script src="packages/StateManager.js"></script>
+<script>
+var a = new StateManager("state");
+function update_thing(val){
+  document.getElementById('thing').innerHTML = val;
+}
+a.add_key("thing", update_thing);
+setTimeout( a.initialize, 500);
+function btnset(e) {
+  a.vals['thing'] = document.getElementById('in').value;
+  a.set_url();
+}
+</script>
+
+Last time: <div id="thing"></div>
+Set for next (then refresh) <input id="in"></input> <input type="button" id="btn" onclick="btnset()">Set State</input>
