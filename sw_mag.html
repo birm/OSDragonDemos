@@ -21,7 +21,7 @@
   <script src="two_init.js"></script>
   <script src="packages/sw_magnifier.js"></script>
   <script>
-    window.setTimeout(magnifier(viewer),500);
+    window.setTimeout(sw_magnifier(viewer1, viewer2),500);
     $('#mag_panel').modal({backdrop:false});
     $("#mag_panel").draggable({handle: ".modal-header"});
     $('#mag_panel').modal('show');
