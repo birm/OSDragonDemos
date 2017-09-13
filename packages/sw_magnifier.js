@@ -1,9 +1,9 @@
 /**  **/
-function magnifier(viewer) {
+function magnifier(viewer, modal_viewer) {
     /**
      * Creates a callback which starts magnifitation code
      * Include this file and start with something like:
-     * window.setTimeout(magnifier(viewer),500);
+     * window.setTimeout(magnifier(viewer, modal_viewer),500);
      */
     // return a callback
     return function () {
