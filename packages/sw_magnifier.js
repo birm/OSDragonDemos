@@ -7,6 +7,15 @@ function sw_magnifier(viewer, modal_viewer) {
      */
     // return a callback
     return function () {
+        var tracker = new OpenSeadragon.MouseTracker({
+                element: viewer.container,
+                moveHandler: function(e) {
+                    var pt = viewer.viewport.pointFromPixel(e.position);
+                    modal_viewer.viewport.zoomTo(modal_viewer.viewport.getMaxZoom());
+                    modal_viewer.viewport.panTo(pt);
+                }
+            });
+        tracker.setTracking(true);
     }
 
 }
