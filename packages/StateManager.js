@@ -14,22 +14,34 @@ class StateManager {
         /* Register a new key
          * @param name - the unique name of the key
          * @param callback - what to do with the value if present on load
+         * then use (this).vals['key'] to set key values
+         * run (this).set_url();  to update the url with all set key values
          */
         this.getters[name] = callback;
     }
 
-    // TODO how to deal with setting values
-
     encode(state_object) {
+        /* encoding for state into url
+         * @param state_object - the object to encode
+         * uses base64 encoding
+         * "exotic" objects likely won't work correctly without a way to convert to and from string
+         */
         return encodeURIComponent(btoa(JSON.stringify(state_object)));
     }
 
     decode(encoded_string){
+      /* decoding for state from url
+       * @param encoded_string - the encoded string
+       * uses base64 decoding
+       * "exotic" objects likely won't work correctly without a way to convert to and from string
+       */
       return JSON.parse(atob(decodeURIComponent(encoded_string)));
     }
 
-    /* sets the current url state */
     set_url() {
+       /* Sets the current state into the url
+        * This updates the string to reflect all set (this).vals for all keys
+        */
         var state_string = this.encode(this.vals);
         // get all url components
         var previous = location.search.substring(1);
@@ -45,6 +57,8 @@ class StateManager {
     }
 
     get_url_state() {
+       /* fetches all state information from the current url
+        */
         // get all url components
         var previous = location.search.substring(1);
         var p_var = previous ? JSON.parse('{"' + previous.replace(/&/g, '","').replace(/=/g, '":"') + '"}',
@@ -55,8 +69,9 @@ class StateManager {
         return p_var[this.prefix];
     }
 
-    /* run all set functions based on the url and registry */
+
     initialize(state) {
+      /* run all set functions based on the url and registry */
         for (var i in state) {
             if (i in this.getters) {
                 this.getters[i](state[i]);
