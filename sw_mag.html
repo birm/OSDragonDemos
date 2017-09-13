@@ -23,6 +23,7 @@
   <script>
     window.setTimeout(magnifier(viewer),500);
     $('#mag_panel').modal({backdrop:false});
+    $("#mag_panel").draggable({handle: ".modal-header"});
     $('#mag_panel').modal('show');
   </script>
 </body>
