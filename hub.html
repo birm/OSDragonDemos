@@ -29,7 +29,7 @@
             var state = JSON.parse(hub.state);
             var pt = new OpenSeadragon.Point(state.x, state.y);
             viewer.viewport.zoomTo(state.z);
-            viewer.viewport.panTo(pt, true);
+            viewer.viewport.panTo(pt, false);
         }
 
         function send_position(e) {
