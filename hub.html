@@ -8,6 +8,11 @@
 <body>
     <div id="head">
         <p>Work with spoke applications to extend viewing capibilites.</p>
+        <span> Use this HUB id: </span> <span id="hubid"></span>
+        <ul>
+          <li><a href="spoke_view_remote.html" target="_blank">Use Buttons to Modify View</a></li>
+          <li><a href="spoke_bookmarks.html" target="_blank">Set and return to bookmarks</a></li>
+        </ul>
     </div>
     <div id="about"></div>
     <div id="windows">
@@ -38,7 +43,7 @@
         viewer.addHandler("pan", send_position);
         window.addEventListener('storage', update_position);
         update_position("hi"); // init spokes
-        window.alert("The HUB id is: " + hub.id);
+        document.getElementById("hubid").textContent = hub.id
     </script>
 </body>
 

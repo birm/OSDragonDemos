@@ -1,13 +1,26 @@
 <html>
+
 <head>
-  <script src="https://raw.githubusercontent.com/birm/birm_web_kit/master/HubSpoke.js"></script>
+    <script src="packages/HubSpoke.js"></script>
 
 </head>
+
 <body>
+  <label for="hub_id">Hub ID</label>
+  <input id="hub_id"></input>
+  <button onClick="init()">intalize</button>
+  New Bookmark Name
+  Set
+
+  List of Bookmark Names
+  Each - > go
 </body>
 <script>
-var bookmark = new Spoke(document.getElementById("hub_id").value, "b");
-bookmark.state = "something";
+function init(){
+  var bookmark = new Spoke(document.getElementById("hub_id").value, "b");
+  bookmark.state = "{\"x\":0.5,\"y\":0.5,\"z\":1}";
+}
+
 </script>
 
 </html>

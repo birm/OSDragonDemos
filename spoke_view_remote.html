@@ -6,7 +6,7 @@
 <body>
   <label for="hub_id">Hub ID</label>
   <input id="hub_id"></input>
-  <button onClick="init()"></button>
+  <button onClick="init()">intalize</button>
   <label for="hub_id" >Delta</label>
   <input id="delta" value="1"></input>
   <input type="button" value="up" onClick="move(0,1)"></input>
@@ -31,7 +31,7 @@ function move(x,y){
 }
 
 function home(){
-  remote.state = "{\"x\":0,\"y\":0,\"z\":1}";
+  remote.state = "{\"x\":0.5,\"y\":0.5,\"z\":1}";
 }
 
 function zoom(z){
