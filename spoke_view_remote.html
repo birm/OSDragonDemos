@@ -1,13 +1,44 @@
 <html>
 <head>
-  <script src="https://raw.githubusercontent.com/birm/birm_web_kit/master/HubSpoke.js"></script>
+  <script src="packages/HubSpoke.js"></script>
 
 </head>
 <body>
+  <label for="hub_id">Hub ID</label>
+  <input id="hub_id"></input>
+  <button onClick="init()"></button>
+  <label for="hub_id" >Delta</label>
+  <input id="delta" value="1"></input>
+  <input type="button" value="up" onClick="move(0,1)"></input>
+  <input type="button" value="down" onClick="move(0,-1)"></input>
+  <input type="button" value="left" onClick="move(1,0)"></input>
+  <input type="button" value="right" onClick="move(-1,0)"></input>
+  <input type="button" value="zoom +" onClick="zoom(1)"></input>
+  <input type="button" value="zoom -" onClick="zoom(-1)"></input>
+  <input type="button" value="home" onClick="home()"></input>
 </body>
 <script>
-var remote = new Spoke(document.getElementById("hub_id").value, "r");
-remote.state = "something";
+var remote;
+function init(){
+  remote = new Spoke(document.getElementById("hub_id").value, "r");
+  remote.state = "{\"x\":0.5,\"y\":0.5,\"z\":1}";
+}
+function move(x,y){
+  var state = JSON.parse(remote.state);
+  state.x += document.getElementById("delta").value * x;
+  state.y += document.getElementById("delta").value * y;
+  remote.state = JSON.stringify(state);
+}
+
+function home(){
+  remote.state = "{\"x\":0,\"y\":0,\"z\":1}";
+}
+
+function zoom(z){
+  var state = JSON.parse(remote.state);
+  state.z += document.getElementById("delta").value * z;
+  remote.state = JSON.stringify(state);
+}
 </script>
 
 </html>
