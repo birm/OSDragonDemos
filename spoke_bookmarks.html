@@ -9,16 +9,28 @@
   <label for="hub_id">Hub ID</label>
   <input id="hub_id"></input>
   <button onClick="init()">intalize</button>
-  New Bookmark Name
-  Set
-
-  List of Bookmark Names
-  Each - > go
+  <label for="hub_id">New Bookmark Name</label>
+  <input id="bookmark"></input>
+  <button onClick="add_bkmk()">add bookmark</button>
+  <label for="hub_id">Return to Bookmark #</label>
+  <input id="backto"></input>
+  <button onClick="back_to_mark()">return to bookmark</button>
+  <div id="bookmarks"></div>
 </body>
 <script>
+var bookmark;
 function init(){
-  var bookmark = new Spoke(document.getElementById("hub_id").value, "b");
+  bookmark = new Spoke(document.getElementById("hub_id").value, "b");
   bookmark.state = "{\"x\":0.5,\"y\":0.5,\"z\":1}";
+}
+var bookmarks = [];
+function add_bkmk(){
+  bookmarks.push(bookmark.state);
+  document.getElementById("bookmarks").innerHTML += "</p> [" + bookmarks.length + "] - " + document.getElementById("bookmark").value + "</p>";
+}
+
+function back_to_mark(){
+  bookmark.state = bookmarks[parseInt(document.getElementById("backto").value,10)-1]
 }
 
 </script>
