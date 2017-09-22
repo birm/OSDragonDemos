@@ -1,0 +1,22 @@
+<html>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.3.0/openseadragon.min.js"></script>
+  <script src="https://raw.githubusercontent.com/birm/birm_web_kit/master/HubSpoke.js"></script>
+</head>
+<body>
+  <div id="head">
+    <p>Work with spoke applications to extend viewing capibilites.</p>
+  </div>
+  <div id="about"></div>
+  <div id="windows">
+    <div id="first" style="width: 400px; height: 400px;"></div>
+  </div>
+  <script src="one_init.js"></script>
+  <script src="packages/magnifier.js"></script>
+  <script>
+    var hub = new Hub();
+    // add on view and stuff, update state
+    hub.state = "something";
+  </script>
+</body>
+</html>
