@@ -1,22 +1,45 @@
 <html>
+
 <head>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.3.0/openseadragon.min.js"></script>
-  <script src="https://raw.githubusercontent.com/birm/birm_web_kit/master/HubSpoke.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.3.0/openseadragon.min.js"></script>
+    <script src="packages/HubSpoke.js"></script>
 </head>
+
 <body>
-  <div id="head">
-    <p>Work with spoke applications to extend viewing capibilites.</p>
-  </div>
-  <div id="about"></div>
-  <div id="windows">
-    <div id="first" style="width: 400px; height: 400px;"></div>
-  </div>
-  <script src="one_init.js"></script>
-  <script src="packages/magnifier.js"></script>
-  <script>
-    var hub = new Hub();
-    // add on view and stuff, update state
-    hub.state = "something";
-  </script>
+    <div id="head">
+        <p>Work with spoke applications to extend viewing capibilites.</p>
+    </div>
+    <div id="about"></div>
+    <div id="windows">
+        <div id="first" style="width: 400px; height: 400px;"></div>
+    </div>
+    <script src="one_init.js"></script>
+    <script src="packages/magnifier.js"></script>
+    <script>
+        var hub = new Hub();
+        // add on view and stuff, update state
+        hub.state = "{\"x\":0,\"y\":0,\"z\":1}";
+
+        function update_position(event) {
+            var state = JSON.parse(hub.state);
+            var pt = new OpenSeadragon.Point(state.x, state.y);
+            viewer.viewport.zoomTo(state.z);
+            viewer.viewport.panTo(pt, true);
+        }
+
+        function send_position(e) {
+            hub.state = JSON.stringify({
+                "x": viewer.viewport.getCenter().x,
+                "y": viewer.viewport.getCenter().y,
+                "z": viewer.viewport.getZoom()
+            });
+        }
+        viewer.addHandler("zoom", send_position);
+        viewer.addHandler("pan", send_position);
+        window.addEventListener('storage', update_position);
+        update_position("hi"); // init spokes
+        window.alert("The HUB id is: " + hub.id);
+    </script>
 </body>
+
 </html>
