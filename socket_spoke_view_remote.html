@@ -1,0 +1,50 @@
+<html>
+<head>
+  <script src="packages/socket.io.js"></script>
+  <script src="packages/HubSpokeSocket_client.js"></script>
+
+</head>
+<body>
+  <label for="hub_id">Hub ID</label>
+  <input id="hub_id"></input>
+  <button onClick="init()">intalize</button>
+  <label for="hub_id" >Delta</label>
+  <input id="delta" value="1"></input>
+  <input type="button" value="up" onClick="move(0,1)"></input>
+  <input type="button" value="down" onClick="move(0,-1)"></input>
+  <input type="button" value="left" onClick="move(1,0)"></input>
+  <input type="button" value="right" onClick="move(-1,0)"></input>
+  <input type="button" value="zoom +" onClick="zoom(1)"></input>
+  <input type="button" value="zoom -" onClick="zoom(-1)"></input>
+  <input type="button" value="home" onClick="home()"></input>
+</body>
+<script>
+var remote;
+function init(){
+  remote = new Spoke(document.getElementById("hub_id").value, "r", "localhost:3001");
+  remote.state = "{\"x\":0.5,\"y\":0.5,\"z\":1}";
+}
+function move(x,y){
+  x = x/20;
+  y = y/20;
+  var state = JSON.parse(remote.state);
+  state.x += document.getElementById("delta").value * x;
+  state.y += document.getElementById("delta").value * y;
+  remote.state = JSON.stringify(state);
+}
+
+function home(){
+  remote.state = "{\"x\":0.5,\"y\":0.5,\"z\":1}";
+}
+
+function zoom(z){
+  var state = JSON.parse(remote.state);
+  state.z += document.getElementById("delta").value * z;
+  if (state.z <=0){
+    state.z = 0.01;
+  }
+  remote.state = JSON.stringify(state);
+}
+</script>
+
+</html>
