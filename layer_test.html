@@ -1,0 +1,37 @@
+<html>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.3.0/openseadragon.min.js"></script>
+</head>
+<body>
+  <div id="head">
+    <p>Layers.</p>
+  </div>
+  <div id="about"></div>
+  <div id="windows">
+    <div id="first" style="width: 300px; height: 300px;"></div>
+  </div>
+  <script src="layer_init.js"></script>
+  <script>
+  window.onkeypress = function(event) {
+      if (event.keyCode == 48) {
+          var pt = viewer.viewport.getCenter();
+          var zm = viewer.viewport.getZoom();
+          viewer.goToPage(0);
+          window.setTimeout(function(){
+              viewer.viewport.zoomTo(zm, true);
+              viewer.viewport.panTo(pt, true);
+          },50);
+      }
+      if (event.keyCode == 49) {
+          var pt = viewer.viewport.getCenter();
+          var zm = viewer.viewport.getZoom();
+          viewer.goToPage(1);
+          window.setTimeout(function(){
+              viewer.viewport.zoomTo(zm, true);
+              viewer.viewport.panTo(pt, true);
+          },50);
+      }
+  }
+  </script>
+</body>
+</html>
