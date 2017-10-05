@@ -17,7 +17,7 @@
           var pt = viewer.viewport.getCenter();
           var zm = viewer.viewport.getZoom();
           viewer.goToPage(0);
-          window.setTimeout(function(){
+          window.setTimeout(() => {
               viewer.viewport.zoomTo(zm, true);
               viewer.viewport.panTo(pt, true);
           },50);
@@ -26,7 +26,7 @@
           var pt = viewer.viewport.getCenter();
           var zm = viewer.viewport.getZoom();
           viewer.goToPage(1);
-          window.setTimeout(function(){
+          window.setTimeout(()=> {
               viewer.viewport.zoomTo(zm, true);
               viewer.viewport.panTo(pt, true);
           },50);
