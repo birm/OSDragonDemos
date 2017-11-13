@@ -3,7 +3,7 @@
 // this code helps us define our schema for state mangment
 // schema : {position:{x:x,y:y,z:z}, algs:[algname1,algname2]}
 var camic_state = new StateManager('state');
-
+var SELECTED_ALGORITHM_LIST = [];
 function setPosition(position){
   var pt = new OpenSeadragon.Point(position.x, position.y);
   viewer.viewport.zoomTo(position.z, pt);
