@@ -20,7 +20,18 @@
     <td width="50%">
       This demo shows the updated state manager that doesn't need to, but can, use the url.<br/>
 
-      Request the link: <input id="in"></input> <input type="button" value="Get state" id="btn" onclick="LinkRequest()"></input>
+      Get state from Image:<input type="button" value="Get State" id="btn" onclick="LinkRequest()"></input><br/>
+      <label for="state_link">State Link</label>
+      <input type="text" id="state_link"></input><br/>
+      <label for="x_pos">X Position</label>
+      <input type="text" id="x_pos"></input><br/>
+      <label for="y_pos">Y Position</label>
+      <input type="text" id="y_pos"></input><br/>
+      <label for="z_pos">Zoom Level</label>
+      <input type="text" id="z_pos"></input><br/>
+      <label for="z_pos">Algorithms, comma separated</label>
+      <input type="text" id="alglist"></input><br/>
+      Set State From Inputs:<input type="button" value="Get State" id="btn" onclick="StateGen()"></input>
     </td>
   </tr>
 </table>
@@ -32,6 +43,9 @@
 var camic_state = new StateManager('state');
 var SELECTED_ALGORITHM_LIST = [];
 function setPosition(position){
+  document.getElementById('x_pos').value = position.x;
+  document.getElementById('y_pos').value = position.y;
+  document.getElementById('z_pos').value = position.z;
   var pt = new OpenSeadragon.Point(position.x, position.y);
   viewer.viewport.zoomTo(position.z, pt);
   viewer.viewport.panTo(pt, true);
@@ -40,6 +54,7 @@ function setPosition(position){
 // TODO test if this method always works
 function setAlgs(algList){
   SELECTED_ALGORITHM_LIST = algList;
+  document.getElementById('alglist').value = SELECTED_ALGORITHM_LIST.join(",");
 }
 
 // initalize after 500 seconds
@@ -77,7 +92,17 @@ moveHandler = function() {
 function LinkRequest(){
   moveHandler();
   algHandler();
-  console.log("{state : " + camic_state.encode(camic_state.vals)+ "}");
+  document.getElementById('state_link').value = window.location + "state=" + camic_state.encode(camic_state.vals);
+}
+
+function StateGen(){
+  // go to the position
+  camic_state.vals['position'] = {x: parseFloat(document.getElementById('x_pos').value), y: parseFloat(document.getElementById('y_pos').value), z: parseFloat(document.getElementById('z_pos').value)};
+  camic_state.vals['alg'] = document.getElementById('alglist').value.split(',')
+  setPosition(camic_state.vals['position'])
+  setAlgs(camic_state.vals['alg']);
+  camic_state.initialize(camic_state.vals);
+  document.getElementById('state_link').value = window.location + "state=" + camic_state.encode(camic_state.vals);
 }
 </script>
 
