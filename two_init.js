@@ -8,7 +8,8 @@ var viewer1 = OpenSeadragon({
 var viewer2 = OpenSeadragon({
   id: "second",
   prefixUrl: prefixurl,
-  tileSources: tilesources
+  tileSources: tilesources,
+  showNavigationControl : false
 });
 
 

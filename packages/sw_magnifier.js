@@ -13,6 +13,9 @@ function sw_magnifier(viewer, modal_viewer) {
                     var pt = viewer.viewport.pointFromPixel(e.position);
                     modal_viewer.viewport.zoomTo(modal_viewer.viewport.getMaxZoom());
                     modal_viewer.viewport.panTo(pt);
+                    document.getElementById('second').style.position = "absolute";
+                    document.getElementById('second').style.left = e.position.x + 20 + "px";
+                    document.getElementById('second').style.top = e.position.y + 20 + "px";
                 }
             });
         tracker.setTracking(true);
