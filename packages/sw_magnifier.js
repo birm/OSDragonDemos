@@ -7,18 +7,20 @@ function sw_magnifier(viewer, modal_viewer) {
      */
     // return a callback
     return function () {
+        document.getElementById(modal_viewer.id).style.position = "absolute";
         var tracker = new OpenSeadragon.MouseTracker({
                 element: viewer.container,
                 moveHandler: function(e) {
                     var pt = viewer.viewport.pointFromPixel(e.position);
                     modal_viewer.viewport.zoomTo(modal_viewer.viewport.getMaxZoom());
                     modal_viewer.viewport.panTo(pt);
-                    document.getElementById('second').style.position = "absolute";
-                    document.getElementById('second').style.left = e.position.x + 20 + "px";
-                    document.getElementById('second').style.top = e.position.y + 20 + "px";
                 }
             });
         tracker.setTracking(true);
+        document.onmousemove = function(e){
+          document.getElementById(modal_viewer.id).style.left = e.clientX + 20 + "px";
+          document.getElementById(modal_viewer.id).style.top = e.clientY + 20 + "px";
+        }
     }
 
 }
