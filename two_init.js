@@ -10,3 +10,17 @@ var viewer2 = OpenSeadragon({
   prefixUrl: prefixurl,
   tileSources: tilesources
 });
+
+
+// add a filter to the second image
+viewer2.addHandler('tile-loaded', function(event) {
+  var canvas = document.createElement( 'canvas' );
+  canvas.width = event.image.width;
+  canvas.height = event.image.height;
+  var renderedContext = canvas.getContext('2d');
+  renderedContext.drawImage(event.image, 0, 0);
+  renderedContext.fillStyle = '#f00';
+  renderedContext.globalAlpha = 0.2;
+  renderedContext.fillRect(0, 0, canvas.width, canvas.height);
+  event.tile.context2D = renderedContext;
+});
