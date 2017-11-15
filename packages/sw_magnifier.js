@@ -18,8 +18,8 @@ function sw_magnifier(viewer, modal_viewer) {
             });
         tracker.setTracking(true);
         document.onmousemove = function(e){
-          document.getElementById(modal_viewer.id).style.left = e.clientX + 20 + "px";
-          document.getElementById(modal_viewer.id).style.top = e.clientY + 20 + "px";
+          document.getElementById(modal_viewer.id).style.left = -document.getElementById(modal_viewer.id).clientWidth + e.clientX - 20 + "px";
+          document.getElementById(modal_viewer.id).style.top = -document.getElementById(modal_viewer.id).clientHeight + e.clientY - 20 + "px";
         }
     }
 

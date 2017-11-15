@@ -14,7 +14,7 @@ var viewer2 = OpenSeadragon({
 
 
 // add a filter to the second image
-viewer2.addHandler('tile-loaded', function(event) {
+viewer1.addHandler('tile-loaded', function(event) {
   var canvas = document.createElement( 'canvas' );
   canvas.width = event.image.width;
   canvas.height = event.image.height;
