@@ -7,12 +7,14 @@ function sw_magnifier(viewer, modal_viewer) {
      */
     // return a callback
     return function () {
+        // set default to max zoom
+        document.getElementById(modal_viewer.id)['zoomlevel'] = modal_viewer.viewport.getMaxZoom();
         document.getElementById(modal_viewer.id).style.position = "absolute";
         var tracker = new OpenSeadragon.MouseTracker({
                 element: viewer.container,
                 moveHandler: function(e) {
                     var pt = viewer.viewport.pointFromPixel(e.position);
-                    modal_viewer.viewport.zoomTo(modal_viewer.viewport.getMaxZoom());
+                    modal_viewer.viewport.zoomTo(document.getElementById(modal_viewer.id)['zoomlevel']);
                     modal_viewer.viewport.panTo(pt);
                 }
             });

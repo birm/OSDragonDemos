@@ -27,5 +27,36 @@
     }
   }
   </script>
+  <script>
+  var spy_modal = document.getElementById('second');
+  var PrefMan = new ClientPrefManager("spyglass");
+  // on a new press, do the following...
+  window.onkeypress = function(event) {
+      // get existing settings
+      var prefs = {};
+      PrefMan.get_pref("modal_settings", (x) => {prefs=x});
+      // handle input
+      if (event.keyCode == 122 || event.key == "z") {
+        // set zoom level
+      }
+      else if (event.keyCode == 87 || event.key == "w") {
+        // set width
+      }
+      else if (event.keyCode == 72 || event.key == "h") {
+        // set height
+      }
+      set_spyglass_settings(prefs);
+  }
+  // Set variables
+  var set_spyglass_settings = function(e) {
+      console.log(e);
+      if (e) {
+          spy_modal.style.width=e.width;
+          spy_modal.style.height=e.height;
+          document.getElementById(modal_viewer.id)['zoomlevel'] = e.zoom;
+      }
+  };
+  PrefMan.get_pref("modal_settings", set_spyglass_settings);
+  </script>
 </body>
 </html>
