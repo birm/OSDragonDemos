@@ -33,9 +33,7 @@
         document.getElementById('second').classList.toggle('invisible');
       }
       // get existing settings
-      var prefs = {};
-      PrefMan.get_pref("modal_settings", (x) => {prefs=x});
-      // handle input
+      var prefs = {width: spy_modal.style.width, height: spy_modal.style.height, zoom: spy_modal['zoomlevel']};
       if (event.keyCode == 122 || event.key == "z") {
         // set zoom level
         var z_in = prompt("Spyglass Zoom", prefs.zoom);
