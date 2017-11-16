@@ -71,18 +71,18 @@ class ClientPrefManager {
     }
 }
 
-var PrefMan = new ClientPrefManager("viewer");
+/**var PrefMan = new ClientPrefManager("viewer");
 // on a new press, do the following...
 window.onkeypress = function(event) {
     if (event.keyCode == 122 || event.key == "z") {
         var toggle = function(e) {
             if (e) {
-                // if it's on, set it off
+                // if it's off, set it on
                 PrefMan.set_pref("scroll_zoom", false);
                 viewer.zoomPerScroll = 1.2;
                 console.log("Scroll Wheel Enabled")
             } else {
-                // if it's off, set it on
+                // if it's on, set it off
                 PrefMan.set_pref("scroll_zoom", true);
                 viewer.zoomPerScroll = 1;
                 console.log("Scroll Wheel Disabled")
@@ -101,3 +101,4 @@ var disable_if_true = function(e) {
     }
 };
 PrefMan.get_pref("scroll_zoom", disable_if_true);
+**/
