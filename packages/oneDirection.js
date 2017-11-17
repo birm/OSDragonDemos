@@ -2,12 +2,12 @@ function oneDirection(viewer1, viewer2) {
     /** Returns a callback which starts one directional view coordination
      * run with window.setTimeout(oneDirection(viewer1, viewer2),500);
      */
-    return function () {
+    return function() {
         // get initial zoom and point on load
         var prev_point = {
-            x: 0.5,
-            y: 0.5
-        },
+                x: 0.5,
+                y: 0.5
+            },
             prev_zoom = 1;
 
         function pan_diff(e) {

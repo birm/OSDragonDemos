@@ -1,87 +1,94 @@
 <html>
-<head>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.3.0/openseadragon.min.js"></script>
-  <style>
-  .invisible{
-    display:none;
-  }
-  </style>
-</head>
-<body>
-  <div id="head">
-    <p>Use a modal in the same window as a magnifier. Press m to show/hide. Press z to set zoom. Press w and h to set width and height of modal, respectively. Zoom, width, and height should persist.</p>
-  </div>
-  <div id="about"></div>
-  <div id="windows">
-    <div id="first" style="width:100%;height:1500px;"></div>
-  </div>
-  <div id="second" style="width: 20%; height: 200px; border:5px solid black; border-radius: 5px;"></div>
 
-  <script src="two_init.js"></script>
-  <script src="packages/sw_magnifier.js"></script>
-  <script src="packages/prefs.js"></script>
-  <script>
-  window.setTimeout(sw_magnifier(viewer1, viewer2),200);
-  </script>
-  <script>
-  var spy_modal = document.getElementById('second');
-  var PrefMan = new ClientPrefManager("spyglass");
-  // on a new press, do the following...
-  window.onkeypress = function(event) {
-      // hide/show modal
-      if (event.keyCode == 77 || event.key == "m") {
-        document.getElementById('second').classList.toggle('invisible');
-      }
-      // get existing settings
-      var prefs = {width: spy_modal.style.width, height: spy_modal.style.height, zoom: spy_modal['zoomlevel']};
-      if (event.keyCode == 122 || event.key == "z") {
-        // set zoom level
-        var z_in = prompt("Spyglass Zoom", prefs.zoom);
-        z_in = parseFloat(z_in, 10);
-        if (!isNaN(z_in)) {
-          console.log('Zoom level set : ' + z_in);
-          prefs.zoom = z_in
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.3.0/openseadragon.min.js"></script>
+    <style>
+        .invisible {
+            display: none;
         }
-      }
-      else if (event.keyCode == 87 || event.key == "w") {
-        // set width
-        var w_in = prompt("Spyglass Width, pixels", prefs.width);
-        w_in = parseFloat(w_in, 10);
-        if (!isNaN(w_in)) {
-          prefs.width = w_in
-          console.log('Width set : ' + w_in);
+    </style>
+</head>
+
+<body>
+    <div id="head">
+        <p>Use a modal in the same window as a magnifier. Press m to show/hide. Press z to set zoom. Press w and h to set width and height of modal, respectively. Zoom, width, and height should persist.</p>
+    </div>
+    <div id="about"></div>
+    <div id="windows">
+        <div id="first" style="width:100%;height:1500px;"></div>
+    </div>
+    <div id="second" style="width: 20%; height: 200px; border:5px solid black; border-radius: 5px;"></div>
+
+    <script src="two_init.js"></script>
+    <script src="packages/spyglass.js"></script>
+    <script src="packages/PreferenceManager.js"></script>
+    <script>
+        window.setTimeout(spyglass(viewer1, viewer2), 200);
+    </script>
+    <script>
+        var spy_modal = document.getElementById('second');
+        var PrefMan = new ClientPrefManager("spyglass");
+        // on a new press, do the following...
+        window.onkeypress = function(event) {
+            // hide/show modal
+            if (event.keyCode == 77 || event.key == "m") {
+                document.getElementById('second').classList.toggle('invisible');
+            }
+            // get existing settings
+            var prefs = {
+                width: spy_modal.style.width,
+                height: spy_modal.style.height,
+                zoom: spy_modal['zoomlevel']
+            };
+            if (event.keyCode == 122 || event.key == "z") {
+                // set zoom level
+                var z_in = prompt("Spyglass Zoom", prefs.zoom);
+                z_in = parseFloat(z_in, 10);
+                if (!isNaN(z_in)) {
+                    console.log('Zoom level set : ' + z_in);
+                    prefs.zoom = z_in
+                }
+            } else if (event.keyCode == 87 || event.key == "w") {
+                // set width
+                var w_in = prompt("Spyglass Width, pixels", prefs.width);
+                w_in = parseFloat(w_in, 10);
+                if (!isNaN(w_in)) {
+                    prefs.width = w_in
+                    console.log('Width set : ' + w_in);
+                }
+            } else if (event.keyCode == 72 || event.key == "h") {
+                // set height
+                var h_in = prompt("Spyglass Height, pixels", prefs.height);
+                h_in = parseInt(h_in, 10);
+                if (!isNaN(h_in)) {
+                    prefs.height = h_in
+                    console.log('Height set : ' + h_in);
+                }
+            }
+            set_spyglass_settings(prefs);
+            PrefMan.set_pref("modal_settings", prefs);
         }
-      }
-      else if (event.keyCode == 72 || event.key == "h") {
-        // set height
-        var h_in = prompt("Spyglass Height, pixels", prefs.height);
-        h_in = parseInt(h_in, 10);
-        if (!isNaN(h_in)) {
-          prefs.height = h_in
-          console.log('Height set : ' + h_in);
-        }
-      }
-      set_spyglass_settings(prefs);
-      PrefMan.set_pref("modal_settings", prefs);
-  }
-  // Set variables
-  var set_spyglass_settings = function(e) {
-      console.log(e);
-      if (e) {
-          spy_modal.style.width=e.width;
-          spy_modal.style.height=e.height;
-          spy_modal['zoomlevel'] = e.zoom;
-      }
-  };
-  window.setTimeout(() => {PrefMan.get_pref("modal_settings", set_spyglass_settings)}, 500);
-  window.setTimeout(() => {
-    // generated with vips dzsave TCGA-49-4506-01Z-00-DX2.png Overlay1
-    viewer1.addTiledImage({
-      tileSource: 'http://129.49.249.177/OSDragonDemos/img/Overlay1.dzi',
-      opacity: 0.5,
-      width: 1
-    })
-  })
-  </script>
+        // Set variables
+        var set_spyglass_settings = function(e) {
+            console.log(e);
+            if (e) {
+                spy_modal.style.width = e.width;
+                spy_modal.style.height = e.height;
+                spy_modal['zoomlevel'] = e.zoom;
+            }
+        };
+        window.setTimeout(() => {
+            PrefMan.get_pref("modal_settings", set_spyglass_settings)
+        }, 500);
+        window.setTimeout(() => {
+            // generated with vips dzsave TCGA-49-4506-01Z-00-DX2.png Overlay1
+            viewer1.addTiledImage({
+                tileSource: 'http://129.49.249.177/OSDragonDemos/img/Overlay1.dzi',
+                opacity: 0.5,
+                width: 1
+            })
+        })
+    </script>
 </body>
+
 </html>
