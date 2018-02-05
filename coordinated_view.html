@@ -6,7 +6,7 @@
 
 <body>
     <div id="head">
-        <p>Changes to the first viewport propogate to the second, the reverse does not happen.</p>
+        <p>Bidirectional Coordination of viewing. Some events, like dragging the canvas, only file on completion.</p>
     </div>
     <div id="about"></div>
     <div id="windows">
@@ -22,7 +22,7 @@
     <script src="two_init.js"></script>
     <script src="packages/coordinatedView.js"></script>
     <script>
-        window.setTimeout(coordinatedView(viewer1, viewer2), 500);
+        window.setTimeout(coordinatedView(viewer1, viewer2, 0, 0), 500);
     </script>
 </body>
 
