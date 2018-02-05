@@ -1,38 +1,33 @@
-function coordinatedView(viewer1, viewer2) {
-    /** Returns a callback which starts bidirectional view coordination
-     * run with window.setTimeout(coordinatedView(viewer1, viewer2),500);
-     */
-    return function() {
-        // get initial zoom and point on load
-        var prev_point = {
-                x: 0.5,
-                y: 0.5
-            },
-            prev_zoom = 1;
+class coordinatedView {
+      /** Returns a callback which starts bidirectional view coordination
+       * run with window.setTimeout((this).initalize(viewer1, viewer2),500);
+       */
+      init(){
+       this.del_x = 0;
+       this.del_y = 0;
+      }
 
-        function pan_diff(e) {
-            // pan second image by amount first panned by
-            var del_x = e.center.x - prev_point.x,
-                del_y = e.center.y - prev_point.y,
-                dest_point = new OpenSeadragon.Point(viewer2.viewport.getCenter().x + del_x, viewer2.viewport.getCenter().y + del_y);
-            // this is the new "previous" for next time
-            viewer2.viewport.panTo(dest_point);
-            prev_point = e.center;
-        }
+      set_calibration(del_x, del_y){
+        this.del_x = del_x;
+        this.del_y = del_y;
+      }
 
-        function zoom_diff(e) {
-            // zoom in second image by amount first zoomed by
-            var new_zoom = viewer2.viewport.getZoom() + (e.zoom - prev_zoom);
-            if (new_zoom <= 0.1) {
-                new_zoom = 0.1;
-            }
-            viewer2.viewport.zoomTo(new_zoom, e.refPoint);
-            // this is the new "previous" for next time
-            console.log(e.refPoint);
-            prev_zoom = e.zoom;
-            prev_point = viewer1.viewport.getCenter();
-        }
-        viewer1.addHandler("zoom", zoom_diff);
-        viewer1.addHandler("pan", pan_diff);
-    };
+      static transmit(from_viewer, to_viewer){
+        var from_point = from_viewer.viewport.getCenter();
+        var dest_point = new OpenSeadragon.Point(from_point.x + this.del_x, from_point.y + this.del_y);
+        to_viewer.viewport.zoomTo(from_viewer.viewport.getZoom(), dest_point, true);
+        to_viewer.viewport.panTo(dest_point, true);
+      }
+
+      initalize(viewer1, viewer2){
+        // on any click on an element, transmit
+        return function(){
+          viewer1.addHandler("zoom", coordinatedView.transmit(viewer1,viewer2));
+          viewer1.addHandler("pan", coordinatedView.transmit(viewer1,viewer2));
+          viewer2.addHandler("zoom", coordinatedView.transmit(viewer2,viewer1));
+          viewer2.addHandler("pan", coordinatedView.transmit(viewer2,viewer1));
+        }.bind(this)
+
+      }
+
 }
