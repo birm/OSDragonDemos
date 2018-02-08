@@ -12,7 +12,7 @@ var canvas, ctx, flag = false,
     currY = 0,
     dot_flag = false;
 
-function init() {
+function drawing_init(canvas) {
     canvas = viewer1.canvas;
     ctx = canvas.getContext("2d");
     w = canvas.width;

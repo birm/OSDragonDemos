@@ -6,7 +6,7 @@
 
 <body>
     <div id="head">
-        <p>Bidirectional Coordination of viewing. Some events, like dragging the canvas, only file on completion.</p>
+        <p>Drawing on Bidirectional Coordination of viewing. Some events, like dragging the canvas, only file on completion.</p>
     </div>
     <div id="about"></div>
     <div id="windows">
@@ -19,11 +19,17 @@
                     <div id="second" style="width:100%;height:700px;"></div>
                 </td>
     </div>
+    <div id="calibration">
+      <span>Calibration</span>
+      H:<input id="del_x" type="range" min="-100" max="100" value="0">
+      V:<input id="del_y" type="range" min="-100" max="100" value="0">
+    </div>
     <script src="two_init.js"></script>
     <script src="packages/coordinatedView.js"></script>
     <script src="packages/Drawing.js"></script>
     <script>
         window.setTimeout(coordinatedView(viewer1, viewer2, 0, 0), 500);
+        init_drawing(viewer1.canvas);
     </script>
 </body>
 

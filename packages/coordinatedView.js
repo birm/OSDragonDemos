@@ -4,8 +4,14 @@ function coordinatedView(viewer1, viewer2, del_x, del_y) {
        */
 
       function initalize(){
-          function transmit(from_viewer, to_viewer){
+          function transmit(from_viewer, to_viewer, reverse){
             return function(){
+              var del_x = document.getElementById("del_x").value/100 || 0;
+              var del_y = document.getElementById("del_y").value/100 || 0;
+              if (reverse){
+                del_x = -del_x;
+                del_y = -del_y;
+              }
               var from_point = from_viewer.viewport.getCenter();
               var dest_point = new OpenSeadragon.Point(from_point.x + del_x, from_point.y + del_y);
               to_viewer.viewport.zoomTo(from_viewer.viewport.getZoom(), dest_point, false);
@@ -15,7 +21,7 @@ function coordinatedView(viewer1, viewer2, del_x, del_y) {
           var events=["click", "mouseover", "mousemove", "wheel", "keypress", "zoom", "pan"];
           events.forEach(function(ev){
             viewer1.container.addEventListener(ev ,transmit(viewer1,viewer2));
-            viewer2.container.addEventListener(ev ,transmit(viewer2,viewer1));
+            viewer2.container.addEventListener(ev ,transmit(viewer2,viewer1, true));
           })
 
       }
