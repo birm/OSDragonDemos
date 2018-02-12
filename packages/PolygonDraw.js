@@ -67,7 +67,7 @@ class PolygonDraw{
     for (var i in points.x){
       poly.add_node(points.x[i], points.y[i]);
     }
-    // add each point systematically
+    return poly;
   }
 
 }

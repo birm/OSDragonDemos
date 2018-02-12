@@ -7,7 +7,8 @@
 
 <body>
     <div id="head">
-        <p>Drawing on Bidirectional Coordination of viewing. Some events, like dragging the canvas, only file on completion.</p>
+        <p>Drawing on Bidirectional Coordination of viewing. Some events, like dragging the canvas, only file on completion.</p><br/>
+        <span><input type="button" value="Left Side Start or Stop Drawing" id="wb1"></input><input type="button" value="Right Side Start or Stop Drawing" id="wb2"></input></span>
     </div>
     <div id="about"></div>
     <div id="windows">
@@ -46,6 +47,33 @@
         var poly_top_2 = new PolygonDraw(whiteboard2);
         whiteboard1.ondblclick = (e) => (poly_top_1.add_node(e.clientX-poly_top_1.svg.getBoundingClientRect().x, e.clientY-poly_top_1.svg.getBoundingClientRect().y));
         whiteboard2.ondblclick = (e) => (poly_top_2.add_node(e.clientX-poly_top_2.svg.getBoundingClientRect().x, e.clientY-poly_top_2.svg.getBoundingClientRect().y));
+
+        function wb1_toggle(){
+          var me = document.getElementById("first_drawing_top");
+          if(me.style['z-index'] == -1){
+            me.style['z-index'] = 3;
+          } else {
+            // convert it
+            // hide it
+            poly_top_1.clear();
+            me.style['z-index'] = -1;
+          }
+        }
+        document.getElementById("wb1").onclick = wb1_toggle;
+
+        function wb2_toggle(){
+          var me = document.getElementById("second_drawing_top");
+          if(me.style['z-index'] == -1){
+            me.style['z-index'] = 3;
+          } else {
+            // convert it
+            // hide it
+            poly_top_2.clear();
+            me.style['z-index'] = -1;
+          }
+        }
+        document.getElementById("wb2").onclick = wb2_toggle;
+
         // handle pulling up drawing canvas
         // - visible yes
         // handle putting back drawing canvas
