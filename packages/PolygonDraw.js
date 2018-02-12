@@ -44,6 +44,14 @@ class PolygonDraw{
 
   // click on node "Selects" the node
 
+  clear(){
+    this.nodes_x = [];
+    this.nodes_y = [];
+    while (this.svg.lastChild) {
+        this.svg.removeChild(this.svg.lastChild);
+    }
+  }
+
   // method to get list of points and lines
   to_points(){
     return {x: this.nodes_x, y: this.nodes_y};
