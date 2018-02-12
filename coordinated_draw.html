@@ -35,8 +35,10 @@
     <script src="packages/PolygonDraw.js"></script>
     <script>
         window.setTimeout(coordinatedView(viewer1, viewer2, 0, 0), 500);
-        var overlay1 = viewer1.svgOverlay();
-        var overlay2 = viewer2.svgOverlay();
+        var overlay1 = viewer1.svgOverlay().node();
+        var overlay2 = viewer2.svgOverlay().node();
+        var poly_osd_1 = new PolygonDraw(overlay1, {color:'blue', width:"0.01"}, true);
+        var poly_osd_2 = new PolygonDraw(overlay2, {color:'green', width:"0.01"}, true);
         function resize_overlays(){
           overlay1.resize();
           overlay2.resize();
@@ -54,6 +56,17 @@
             me.style['z-index'] = 3;
           } else {
             // convert it
+            var original = poly_top_1.to_points();
+            for (var i in original.x){
+              var pt = new OpenSeadragon.Point(original.x[i], original.y[i]);
+              var cpt = viewer1.viewport.viewerElementToViewportCoordinates(pt);
+              var x = cpt.x ;
+              var y = cpt.y;
+              // take calibration into account
+              poly_osd_1.add_node(x,y);
+              // also put on the other
+              poly_osd_2.add_node(x,y);
+            }
             // hide it
             poly_top_1.clear();
             me.style['z-index'] = -1;
@@ -67,20 +80,22 @@
             me.style['z-index'] = 3;
           } else {
             // convert it
+            var original = poly_top_2.to_points();
+            for (var i in original.x){
+              var pt = new OpenSeadragon.Point(original.x[i], original.y[i]);
+              var cpt = viewer2.viewport.viewerElementToViewportCoordinates(pt);
+              var x = cpt.x;
+              var y = cpt.y;
+              // take calibration into account
+              poly_osd_2.add_node(x,y);
+              poly_osd_1.add_node(x,y);
+            }
             // hide it
             poly_top_2.clear();
             me.style['z-index'] = -1;
           }
         }
         document.getElementById("wb2").onclick = wb2_toggle;
-
-        // handle pulling up drawing canvas
-        // - visible yes
-        // handle putting back drawing canvas
-        // - get points, convert to osd coords
-        // - clear canvas
-        // - z-index: -1;
-        // - visible no
         window.addEventListener("resize", resize_overlays, false);
     </script>
 </body>

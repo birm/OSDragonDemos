@@ -1,11 +1,15 @@
 class PolygonDraw{
-  constructor(parent, options){
+  constructor(parent, options, is_svg){
     this.parent = parent;
     this.ns = 'http://www.w3.org/2000/svg';
-    this.svg = document.createElementNS(this.ns, 'svg')
-    this.svg.setAttributeNS(null, 'width', '100%')
-    this.svg.setAttributeNS(null, 'height', '100%')
-    this.parent.appendChild(this.svg);
+    if (!is_svg){
+      this.svg = document.createElementNS(this.ns, 'svg')
+      this.svg.setAttributeNS(null, 'width', '100%')
+      this.svg.setAttributeNS(null, 'height', '100%')
+      this.parent.appendChild(this.svg);
+    } else {
+      this.svg = this.parent;
+    }
     this.nodes_x=[];
     this.nodes_y=[];
     // parse options
