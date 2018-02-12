@@ -1,5 +1,5 @@
 class PolygonDraw{
-  constructor(parentId){
+  constructor(parentId, options){
     this.parent = document.getElementById(parentId);
     this.ns = 'http://www.w3.org/2000/svg';
     this.svg = document.createElementNS(this.ns, 'svg')
@@ -8,6 +8,9 @@ class PolygonDraw{
     this.parent.appendChild(this.svg);
     this.nodes_x=[];
     this.nodes_y=[];
+    // parse options
+    this.color = this.options.color || "black";
+    this.width = this.options.width || '5';
   }
 
   add_node(x,y){
@@ -15,9 +18,9 @@ class PolygonDraw{
     var node = document.createElementNS(this.ns, 'circle');
     node.setAttributeNS(null, 'cx', x);
     node.setAttributeNS(null, 'cy', y);
-    node.setAttributeNS(null, 'r', '5');
-    node.setAttributeNS(null, 'stroke', 'black');
-    node.setAttributeNS(null, 'stroke-width', '3');
+    node.setAttributeNS(null, 'r', this.width);
+    node.setAttributeNS(null, 'stroke', this.color);
+    node.setAttributeNS(null, 'stroke-width', this.width);
     this.svg.appendChild(node);
     // add line if applicable
     if (this.nodes_x.length && this.nodes_y.length){
@@ -26,7 +29,7 @@ class PolygonDraw{
       line.setAttributeNS(null, 'y1', this.nodes_y[this.nodes_y.length -1])
       line.setAttributeNS(null, 'x2', x);
       line.setAttributeNS(null, 'y2', y);
-      line.setAttributeNS(null, 'style', "stroke:black;stroke-width:2");
+      line.setAttributeNS(null, 'style', "stroke:" + this.color + ";stroke-width:" + this.width +";");
       this.svg.appendChild(line);
     }
     // register node
