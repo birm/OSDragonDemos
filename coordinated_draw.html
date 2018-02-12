@@ -2,6 +2,7 @@
 
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.3.0/openseadragon.min.js"></script>
+    <script src="packages/opendragon-svg-overlay.js"></script>
 </head>
 
 <body>
@@ -26,10 +27,16 @@
     </div>
     <script src="two_init.js"></script>
     <script src="packages/coordinatedView.js"></script>
-    <script src="packages/Drawing.js"></script>
+    <script src="packages/PolygonDraw.js"></script>
     <script>
         window.setTimeout(coordinatedView(viewer1, viewer2, 0, 0), 500);
-        init_drawing(viewer1.canvas);
+        var overlay1 = viewer1.svgOverlay();
+        var overlay2 = viewer2.svgOverlay();
+        function resize_overlays(){
+          overlay1.resize();
+          overlay2.resize();
+        }
+        window.addEventListener("resize", resize_overlays, false);
     </script>
 </body>
 
