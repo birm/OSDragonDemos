@@ -60,12 +60,14 @@
             for (var i in original.x){
               var pt = new OpenSeadragon.Point(original.x[i], original.y[i]);
               var cpt = viewer1.viewport.viewerElementToViewportCoordinates(pt);
-              var x = cpt.x ;
+              var x = cpt.x;
               var y = cpt.y;
+              var xp = cpt.x + (document.getElementById("del_x").value/100);
+              var yp = cpt.y + (document.getElementById("del_y").value/100);
               // take calibration into account
               poly_osd_1.add_node(x,y);
               // also put on the other
-              poly_osd_2.add_node(x,y);
+              poly_osd_2.add_node(xp,yp);
             }
             // hide it
             poly_top_1.clear();
@@ -86,9 +88,12 @@
               var cpt = viewer2.viewport.viewerElementToViewportCoordinates(pt);
               var x = cpt.x;
               var y = cpt.y;
+              var xp = cpt.x - (document.getElementById("del_x").value/100);
+              var yp = cpt.y - (document.getElementById("del_y").value/100);
               // take calibration into account
-              poly_osd_2.add_node(x,y);
               poly_osd_1.add_node(x,y);
+              // also put on the other
+              poly_osd_2.add_node(xp,yp);
             }
             // hide it
             poly_top_2.clear();
