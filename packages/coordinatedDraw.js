@@ -27,3 +27,22 @@ function coordinatedView(viewer1, viewer2, del_x, del_y) {
       }
       return initalize;
 }
+
+class CoordDraw{
+  init(){
+    this.on = false;
+    this.del_x = 0;
+    this.del_y = 0;
+  }
+  toggle(){
+    this.on = !this.on;
+  }
+  calibrate(del_x, del_y){
+    this.del_x = del_x;
+    this.del_y = del_y;
+  }
+}
+
+function pre_calibration(viewer1, viewer2){
+
+}
