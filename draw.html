@@ -1,0 +1,10 @@
+<html>
+<p>Double click in the box to add a point and draw a polygon.</p>
+<div id="drawing" style="border-style: dotted;"></div>
+<script src="packages/PolygonDraw.js"></script>
+<script>
+var drawing = document.getElementById("drawing");
+var poly = new PolygonDraw(drawing, {color:"red", width:2});
+drawing.ondblclick = (e) => (poly.add_node(e.clientX, e.clientY))
+</script>
+</html>

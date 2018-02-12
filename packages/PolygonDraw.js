@@ -1,6 +1,6 @@
 class PolygonDraw{
-  constructor(parentId, options){
-    this.parent = document.getElementById(parentId);
+  constructor(parent, options){
+    this.parent = parent;
     this.ns = 'http://www.w3.org/2000/svg';
     this.svg = document.createElementNS(this.ns, 'svg')
     this.svg.setAttributeNS(null, 'width', '100%')
@@ -9,6 +9,7 @@ class PolygonDraw{
     this.nodes_x=[];
     this.nodes_y=[];
     // parse options
+    this.options = options || {};
     this.color = this.options.color || "black";
     this.width = this.options.width || '5';
   }
@@ -33,8 +34,8 @@ class PolygonDraw{
       this.svg.appendChild(line);
     }
     // register node
-    this.nodes_x.append(x);
-    this.nodes_y.append(y);
+    this.nodes_x.push(x);
+    this.nodes_y.push(y);
   }
   // TODO selections
   // on creation, a node is automatically selected
@@ -44,8 +45,21 @@ class PolygonDraw{
   // click on node "Selects" the node
 
   // method to get list of points and lines
+  to_points(){
+    return {x: this.nodes_x, y: this.nodes_y};
+  }
 
   // method to create from list of points and lines
-
+  static from_points(parent, points, options){
+    // create object
+    if (points.x.length != points.y.length){
+      throw "from_points requires points.x and points.y to be equal length";
+    }
+    var poly = new PolygonDraw(parent, options);
+    for (var i in points.x){
+      poly.add_node(points.x[i], points.y[i]);
+    }
+    // add each point systematically
+  }
 
 }
