@@ -5,6 +5,6 @@
 <script>
 var drawing = document.getElementById("drawing");
 var poly = new PolygonDraw(drawing, {color:"red", width:2});
-drawing.ondblclick = (e) => (poly.add_node(e.clientX, e.clientY))
+drawing.ondblclick = (e) => (poly.add_node(e.offsetX, e.offsetY))
 </script>
 </html>
