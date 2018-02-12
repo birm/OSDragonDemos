@@ -14,9 +14,11 @@
         <table width="100%">
             <tr height="100%">
                 <td width="50%">
+                    <div id="first_drawing_top" style="z-index:-1;width:100%;height:700px;"></div>
                     <div id="first" style="width:100%;height:700px;"></div>
                 </td>
                 <td width="50%">
+                    <div id="second_drawing_top" style="z-index:-1;width:100%;height:700px;"></div>
                     <div id="second" style="width:100%;height:700px;"></div>
                 </td>
     </div>
@@ -36,6 +38,13 @@
           overlay1.resize();
           overlay2.resize();
         }
+        // handle pulling up drawing canvas
+        // - visible yes
+        // handle putting back drawing canvas
+        // - get points, convert to osd coords
+        // - clear canvas
+        // - z-index: -1;
+        // - visible no
         window.addEventListener("resize", resize_overlays, false);
     </script>
 </body>
