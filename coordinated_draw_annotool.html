@@ -2,14 +2,20 @@
 
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.3.0/openseadragon.min.js"></script>
-    <script src="packages/opendragon-svg-overlay.js"></script>
+    <script src="borrowed/openseadragon-canvas-overlay.js"></script>
+    <script src="borrowed/osd_helper.min.js"></script>
+    <script src="borrowed/MooTools-Core-1.6.0.js"></script>
+    <script
+			  src="http://code.jquery.com/jquery-3.3.1.min.js"
+			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			  crossorigin="anonymous"></script>
+
 </head>
 
 <body>
     <div id="head">
         <p>Drawing on Bidirectional Coordination of viewing. Some events, like dragging the canvas, only file on completion.</p><br/>
-        <p>Some oddities so far include scale-insensitive drawing, and that you can have one drawing on and another off, which can confuse calibration. Angular calibration is upcoming!</p>
-        <span><input type="button" value="Left Side Start or Stop Drawing" id="wb1"></input><input type="button" value="Right Side Start or Stop Drawing" id="wb2"></input></span>
+        <span><input type="button" value="Left Side Start or Stop Drawing" id="wb1"></input><span>
     </div>
     <div id="about"></div>
     <div id="windows">
@@ -26,83 +32,27 @@
                   </div>
                 </td>
     </div>
-    <div id="calibration">
+    <div id="calibration" style="display:none;">
       <span>Calibration</span>
       H:<input id="del_x" type="range" min="-100" max="100" value="0">
       V:<input id="del_y" type="range" min="-100" max="100" value="0">
     </div>
     <script src="two_init.js"></script>
     <script src="packages/coordinatedView.js"></script>
-    <script src="packages/PolygonDraw.js"></script>
+    <script src="packages/ProxyTools.js"></script>
+    <script src="borrowed/osdCoordinatedAnnotationTools.js"></script>
     <script>
+        // prereqs
+        viewer1.imagingHelper = new OpenSeadragonImaging.ImagingHelper({viewer: viewer1});
         window.setTimeout(coordinatedView(viewer1, viewer2, 0, 0), 500);
-        var overlay1 = viewer1.svgOverlay().node();
-        var overlay2 = viewer2.svgOverlay().node();
-        var poly_osd_1 = new PolygonDraw(overlay1, {color:'blue', width:"0.01"}, true);
-        var poly_osd_2 = new PolygonDraw(overlay2, {color:'green', width:"0.01"}, true);
-        function resize_overlays(){
-          overlay1.resize();
-          overlay2.resize();
-        }
-        var whiteboard1 = document.getElementById("first_drawing_top");
-        var whiteboard2 = document.getElementById("second_drawing_top");
-        var poly_top_1 = new PolygonDraw(whiteboard1);
-        var poly_top_2 = new PolygonDraw(whiteboard2);
-        whiteboard1.ondblclick = (e) => (poly_top_1.add_node(e.clientX-poly_top_1.svg.getBoundingClientRect().x, e.clientY-poly_top_1.svg.getBoundingClientRect().y));
-        whiteboard2.ondblclick = (e) => (poly_top_2.add_node(e.clientX-poly_top_2.svg.getBoundingClientRect().x, e.clientY-poly_top_2.svg.getBoundingClientRect().y));
-
-        function wb1_toggle(){
-          var me = document.getElementById("first_drawing_top");
-          if(me.style['z-index'] == -1){
-            me.style['z-index'] = 3;
-          } else {
-            // convert it
-            var original = poly_top_1.to_points();
-            for (var i in original.x){
-              var pt = new OpenSeadragon.Point(original.x[i], original.y[i]);
-              var cpt = viewer1.viewport.viewerElementToViewportCoordinates(pt);
-              var x = cpt.x;
-              var y = cpt.y;
-              var xp = cpt.x + (document.getElementById("del_x").value/100);
-              var yp = cpt.y + (document.getElementById("del_y").value/100);
-              // take calibration into account
-              poly_osd_1.add_node(x,y);
-              // also put on the other
-              poly_osd_2.add_node(xp,yp);
-            }
-            // hide it
-            poly_top_1.clear();
-            me.style['z-index'] = -1;
-          }
-        }
-        document.getElementById("wb1").onclick = wb1_toggle;
-
-        function wb2_toggle(){
-          var me = document.getElementById("second_drawing_top");
-          if(me.style['z-index'] == -1){
-            me.style['z-index'] = 3;
-          } else {
-            // convert it
-            var original = poly_top_2.to_points();
-            for (var i in original.x){
-              var pt = new OpenSeadragon.Point(original.x[i], original.y[i]);
-              var cpt = viewer2.viewport.viewerElementToViewportCoordinates(pt);
-              var x = cpt.x;
-              var y = cpt.y;
-              var xp = cpt.x - (document.getElementById("del_x").value/100);
-              var yp = cpt.y - (document.getElementById("del_y").value/100);
-              // take calibration into account
-              poly_osd_1.add_node(x,y);
-              // also put on the other
-              poly_osd_2.add_node(xp,yp);
-            }
-            // hide it
-            poly_top_2.clear();
-            me.style['z-index'] = -1;
-          }
-        }
-        document.getElementById("wb2").onclick = wb2_toggle;
-        window.addEventListener("resize", resize_overlays, false);
+        // set up our overlays
+        var c1, c2
+        viewer1.canvasOverlay((x)=>c1 = x.context2d())
+        viewer2.canvasOverlay((x)=>c2 = x.context2d())
+        var contexts = [c1, c2];
+        // set up annotools
+        var at = new annotools({canvas:"first", iid:"iidhere", viewer:viewer1, mpp:1, context_list: contexts});
+        // any conversion required between screen coords and viewport coords
     </script>
 </body>
 
