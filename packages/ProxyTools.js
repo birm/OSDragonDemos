@@ -35,27 +35,27 @@ function delayer(base){
 }
 
 // call cloner with base and a list of items to clone (same type preferably) of the same type
-function cloner(base, clones){
+function cloner(clones){
   var handler = {
      get(target, name, reciever){
-      if (typeof target[name] == "function"){
+      if (typeof clones[0][name] == "function"){
         // call the function with args to all contexts
         return function (...args){
-          clones.forEach((x) => x[name].apply(this, args));
+          var ret = clones[0][name](...args);
+          clones.slice(1).forEach((x) => (x[name](...args)));
           // return whatever base returns
-          return target[name].apply(this, args)
+          return ret;
         }
       } else {
         // just return base context value if it's not a function
-        return target[name];
+        return clones[0][name];
       }
 
     },
     set(obj, prop, val) {
-        clones.forEach((x) => x[prop] = val);
-        obj[prop] = val;
+        clones.forEach((x) => x[prop] = val);;
         return val;
       }
     }
-  return new Proxy(base, handler);
+  return new Proxy(clones, handler);
 }

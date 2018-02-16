@@ -173,6 +173,8 @@ annotools.prototype.getMultiAnnot = function (viewer) {
   var val3 = ''
 
   var algorithms = []
+  var ALGORITHM_LIST = ALGORITHM_LIST || [];
+  var SELECTED_ALGORITHM_LIST = SELECTED_ALGORITHM_LIST || []
   console.log(ALGORITHM_LIST);
   console.log(SELECTED_ALGORITHM_LIST);
   SELECTED_ALGORITHM_LIST = SELECTED_ALGORITHM_LIST.sort();
@@ -395,8 +397,9 @@ annotools.prototype.drawMarkups = function () // Draw Markups
       height: height
     })
     // The canvas context
-    var ctx_base = this.drawCanvas.getContext('2d');
-    var ctx = cloner(ctx_base,this.context_list);
+    var ctx_base = [this.drawCanvas.getContext('2d')].append(this.context_list);
+    console.log(this.context_list)
+    var ctx = cloner(ctx_base);
     // Draw Markups on Canvas
     switch (this.mode) {
       case 'rect':
@@ -468,8 +471,9 @@ annotools.prototype.createWorkOrder = function () {
       height: height
     })
     // The canvas context
-    var ctx_base = this.drawCanvas.getContext('2d');
-    var ctx = cloner(ctx_base,this.context_list);
+    var ctx_base = [this.drawCanvas.getContext('2d')].append(this.context_list);
+        console.log(this.context_list)
+    var ctx = cloner(ctx_base);
 
     //console.log('drawing rectangle')
     this.removeMouseEvents()

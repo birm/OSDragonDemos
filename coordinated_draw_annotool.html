@@ -15,14 +15,14 @@
 <body>
     <div id="head">
         <p>Drawing on Bidirectional Coordination of viewing. Some events, like dragging the canvas, only file on completion.</p><br/>
-        <span><input type="button" value="Left Side Start or Stop Drawing" id="wb1"></input><span>
+        <span><input type="button" value="Try to draw a rect" id="wb1"></input><span>
     </div>
     <div id="about"></div>
     <div id="windows">
         <table width="100%">
             <tr height="100%">
                 <td width="50%">
-                    <div id="first" style="position:relative;width:100%;height:700px;">
+                    <div id="first" class="first" style="position:relative;width:100%;height:700px;">
                       <div id="first_drawing_top" style="position:absolute;z-index:-1;width:100%;height:700px;"></div>
                     </div>
                 </td>
@@ -41,18 +41,39 @@
     <script src="packages/coordinatedView.js"></script>
     <script src="packages/ProxyTools.js"></script>
     <script src="borrowed/osdCoordinatedAnnotationTools.js"></script>
+    <script src="borrowed/geoJSONHandler.js"></script>
     <script>
         // prereqs
+        Element.prototype.show = function(){
+          this.style.display = "block";
+        }
+        Element.prototype.hide = function(){
+          this.style.display = "none";
+        }
+        viewer = viewer1;
         viewer1.imagingHelper = new OpenSeadragonImaging.ImagingHelper({viewer: viewer1});
         window.setTimeout(coordinatedView(viewer1, viewer2, 0, 0), 500);
         // set up our overlays
-        var c1, c2
-        viewer1.canvasOverlay((x)=>c1 = x.context2d())
-        viewer2.canvasOverlay((x)=>c2 = x.context2d())
+        var c1 = delayer({});
+        var c2 = delayer({});
         var contexts = [c1, c2];
+        console.log(contexts);
         // set up annotools
         var at = new annotools({canvas:"first", iid:"iidhere", viewer:viewer1, mpp:1, context_list: contexts});
         // any conversion required between screen coords and viewport coords
+        document.getElementById("wb1").onClick = function(){
+          at.mode="rect"
+          at.drawMarkups();
+        }
+        var overlay1 = viewer1.canvasOverlay({
+            clearBeforeRedraw:true
+        });
+        var overlay2 = viewer2.canvasOverlay({
+            clearBeforeRedraw:true
+        });
+        viewer1.addHandler("animation" , (x)=>  c1.__apply_all(overlay1.context2d()));
+        viewer2.addHandler("animation" , (x)=> c2.__apply_all(overlay2.context2d()));
+
     </script>
 </body>
 
