@@ -69,7 +69,7 @@
         // set up annotools
         var at = new annotools({canvas:"first", iid:"iidhere", viewer:viewer1, mpp:1, context_list: contexts});
         // any conversion required between screen coords and viewport coords
-        document.getElementById("wb1").onClick = function(){
+        document.getElementById("wb1").onclick = function(){
           at.mode="rect"
           at.drawMarkups();
         }

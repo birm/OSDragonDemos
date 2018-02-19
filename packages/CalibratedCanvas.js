@@ -2,12 +2,20 @@ function CalibratedCanvas(base, viewer) {
     // translation methods
     function convertPoint(x, y) {
         var pt = new OpenSeadragon.Point(x, y);
-        return viewer.viewport.viewerElementToImageCoordinates(pt);
+        //var bnds = viewer.container.getBoundingClientRect();
+        //pt.x = pt.x - bnds.left;
+        //pt.y = pt.y - bnds.top;
+        var pt2 = viewer.viewport.pointFromPixel(pt);
+        return viewer.viewport.viewportToImageCoordinates(pt2);
     }
-
-    function convertLen(len) {
-        var pt = new OpenSeadragon.Point(len, 0);
-        return viewer.viewport.viewerElementToImageCoordinates(pt).x;
+    function convertLen(x, y) {
+      var pt = new OpenSeadragon.Point(x, y);
+      var pt_ref = new OpenSeadragon.Point(0, 0);
+      var vp_pt = viewer.viewport.pointFromPixel(pt);
+      var vp_pt_ref = viewer.viewport.pointFromPixel(pt_ref);
+      var im_pt = viewer.viewport.viewportToImageCoordinates(vp_pt);
+      var im_pt_ref = viewer.viewport.viewportToImageCoordinates(vp_pt_ref);
+      return im_pt.minus(im_pt_ref);
     }
 
     var handler = {
@@ -23,17 +31,20 @@ function CalibratedCanvas(base, viewer) {
             var _txt = ["fillText", "strokeText"]
             if (_pt2_len2.indexOf(prop) >= 0) {
                 return function(...args) {
+                    console.log("before");
+                    console.log(args);
                     if (args.length >= 2) {
                         var pt = convertPoint(args[0], args[1])
                         args[0] = pt.x;
                         args[1] = pt.y;
                     }
-                    if (args.length >= 3) {
-                        args[2] = convertLen(args[2])
-                    }
                     if (args.length >= 4) {
-                        args[3] = convertLen(args[3])
+                        var pt = convertLen(args[2], args[3])
+                        args[2] = pt.x;
+                        args[3] = pt.y;
                     }
+                    console.log("after")
+                    console.log(args);
                     obj[prop](...args);
                 }
             } else if (_allpoints.indexOf(prop) >= 0) {
@@ -63,7 +74,7 @@ function CalibratedCanvas(base, viewer) {
                         args[2] = pt.y;
                     }
                     if (args.length >= 4) {
-                        args[3] = convertLen(args[3]);
+                        args[3] = convertLen(args[3],0).x;
                     }
                     obj[prop](...args);
                 }
@@ -76,7 +87,7 @@ function CalibratedCanvas(base, viewer) {
                         args[1] = pt.y;
                     }
                     if (args.length >= 3) {
-                        args[2] = convertLen(args[2]);
+                        args[2] = convertLen(args[2],0).x;
                     }
                     obj[prop](...args);
                 }
@@ -94,7 +105,7 @@ function CalibratedCanvas(base, viewer) {
                         args[3] = pt.y;
                     }
                     if (args.length >= 5) {
-                        args[4] = convertLen(args[4]);
+                        args[4] = convertLen(args[4],0).x;
                     }
                     obj[prop](...args);
                 }
@@ -127,7 +138,7 @@ function CalibratedCanvas(base, viewer) {
         set(obj, prop, val) {
             var _lengthy = ["lineWidth"];
             if (_lengthy.indexOf(prop) >= 0) {
-                val = convertLen(val);
+                val = convertLen(val,0).x;
             }
             obj[prop] = val;
         }
