@@ -40,6 +40,7 @@
     <script src="two_init.js"></script>
     <script src="packages/coordinatedView.js"></script>
     <script src="packages/ProxyTools.js"></script>
+    <script src="packages/CalibratedCanvas.js"></script>
     <script src="borrowed/osdCoordinatedAnnotationTools.js"></script>
     <script src="borrowed/geoJSONHandler.js"></script>
     <script>
@@ -56,12 +57,14 @@
         // set up our overlays
         var c1 = delayer({});
         var c2 = delayer({});
+        var c1_c = CalibratedCanvas(c1, viewer1);
+        var c2_c = CalibratedCanvas(c2, viewer2);
         // demo
         c1.fillStyle = "red";
         c1.fillRect(0, 0, 500, 500);
         c2.fillStyle = "red";
         c2.fillRect(0, 0, 500, 500);
-        var contexts = [c1, c2];
+        var contexts = [c1_c, c2_c];
         console.log(contexts);
         // set up annotools
         var at = new annotools({canvas:"first", iid:"iidhere", viewer:viewer1, mpp:1, context_list: contexts});
