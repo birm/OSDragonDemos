@@ -2,9 +2,6 @@ function CalibratedCanvas(base, viewer) {
     // translation methods
     function convertPoint(x, y) {
         var pt = new OpenSeadragon.Point(x, y);
-        //var bnds = viewer.container.getBoundingClientRect();
-        //pt.x = pt.x - bnds.left;
-        //pt.y = pt.y - bnds.top;
         var pt2 = viewer.viewport.pointFromPixel(pt);
         return viewer.viewport.viewportToImageCoordinates(pt2);
     }

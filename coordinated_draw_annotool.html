@@ -9,13 +9,22 @@
 			  src="http://code.jquery.com/jquery-3.3.1.min.js"
 			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
 			  crossorigin="anonymous"></script>
+    <style>
+    .hidden{
+      display:none;
+    }
+    </style>
 
 </head>
 
 <body>
     <div id="head">
         <p>Drawing on Bidirectional Coordination of viewing. Some events, like dragging the canvas, only file on completion.</p><br/>
-        <span><input type="button" value="Try to draw a rect" id="wb1"></input><span>
+        <span><input type="button" value="Start Drawing" id="draw_start"></input><span>
+        <div id="drawing_tools" class="hidden">
+          <span><input type="button" value="Stop Drawing" id="draw_stop"></input><span>
+          <span><input type="button" value="Rectangle" id="rect_d"></input><span>
+        </div>
     </div>
     <div id="about"></div>
     <div id="windows">
@@ -32,7 +41,7 @@
                   </div>
                 </td>
     </div>
-    <div id="calibration" style="display:none;">
+    <div id="calibration" class="hidden">
       <span>Calibration</span>
       H:<input id="del_x" type="range" min="-100" max="100" value="0">
       V:<input id="del_y" type="range" min="-100" max="100" value="0">
@@ -46,10 +55,10 @@
     <script>
         // prereqs
         Element.prototype.show = function(){
-          this.style.display = "block";
+          this.classList.remove("hidden")
         }
         Element.prototype.hide = function(){
-          this.style.display = "none";
+          this.classList.add("hidden")
         }
         viewer = viewer1;
         viewer1.imagingHelper = new OpenSeadragonImaging.ImagingHelper({viewer: viewer1});
@@ -69,9 +78,23 @@
         // set up annotools
         var at = new annotools({canvas:"first", iid:"iidhere", viewer:viewer1, mpp:1, context_list: contexts});
         // any conversion required between screen coords and viewport coords
-        document.getElementById("wb1").onclick = function(){
+        document.getElementById("draw_start").onclick = function(){
+          document.getElementById("draw_start").classList.add("hidden");
+          document.getElementById("draw_stop").classList.remove("hidden");
+          document.getElementById("drawing_tools").classList.remove("hidden");
+          document.getElementsByTagName("canvas")[4].parentElement.classList.remove("hidden");
+        }
+        document.getElementById("draw_stop").onclick = function(){
+          document.getElementById("draw_start").classList.remove("hidden");
+          document.getElementById("draw_stop").classList.add("hidden");
+          document.getElementById("drawing_tools").classList.add("hidden");
+          document.getElementsByTagName("canvas")[4].parentElement.classList.add("hidden");
+          // needs to stop both motion
+        }
+        document.getElementById("rect_d").onclick = function(){
           at.mode="rect"
           at.drawMarkups();
+          // needs to stop both motion
         }
         var overlay1 = viewer1.canvasOverlay({
             clearBeforeRedraw:true,
