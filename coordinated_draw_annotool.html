@@ -56,6 +56,11 @@
         // set up our overlays
         var c1 = delayer({});
         var c2 = delayer({});
+        // demo
+        c1.fillStyle = "red";
+        c1.fillRect(0, 0, 500, 500);
+        c2.fillStyle = "red";
+        c2.fillRect(0, 0, 500, 500);
         var contexts = [c1, c2];
         console.log(contexts);
         // set up annotools
@@ -66,13 +71,19 @@
           at.drawMarkups();
         }
         var overlay1 = viewer1.canvasOverlay({
-            clearBeforeRedraw:true
+            clearBeforeRedraw:true,
+            onRedraw:function() {
+            c2.__apply_all(overlay1.context2d());
+        }
         });
         var overlay2 = viewer2.canvasOverlay({
-            clearBeforeRedraw:true
+            clearBeforeRedraw:true,
+            onRedraw:function() {
+              c2.__apply_all(overlay2.context2d());
+          }
         });
-        viewer1.addHandler("animation" , (x)=>  c1.__apply_all(overlay1.context2d()));
-        viewer2.addHandler("animation" , (x)=> c2.__apply_all(overlay2.context2d()));
+        //viewer1.addHandler("animation" , (x)=>  c1.__apply_all(overlay1.context2d()));
+        //viewer2.addHandler("animation" , (x)=> c2.__apply_all(overlay2.context2d()));
 
     </script>
 </body>
