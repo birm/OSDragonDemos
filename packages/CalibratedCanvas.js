@@ -31,5 +31,16 @@ class CalibratedCanvas{
   putImageData(imagedata, dx, dy, dirtyX, dirtyY, dirtyWidth, dirtyHeight)
   // just forward other methods
 
+  // translation methods;
+  convertPoint(point){
+    var pt = new OpenSeaDragon.Point(point.x,point.y);
+    // convert
+    return point
+  }
+
+  convertLen(len){
+    return len
+  }
+
   // probably want to return proxy?
 }
