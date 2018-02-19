@@ -1,7 +1,6 @@
 class CalibratedCanvas{
-  init(canvas, ref, viewer){
+  constructor(canvas, viewer){
     this.base = base;
-    this.ref = ref;
     this.viewer = viewer;
   }
   // method for coordinate conversion
@@ -31,15 +30,20 @@ class CalibratedCanvas{
   putImageData(imagedata, dx, dy, dirtyX, dirtyY, dirtyWidth, dirtyHeight)
   // just forward other methods
 
+  // for each image, we want the screen position on the overlay
+  // pixel to image coords
+
   // translation methods;
-  convertPoint(point){
+  static convertPoint(point){
     var pt = new OpenSeaDragon.Point(point.x,point.y);
     // convert
-    return point
+    return this.viewer.viewport.viewerElementToImageCoordinates(pt);
   }
 
-  convertLen(len){
-    return len
+  static convertLen(len){
+    var pt = new OpenSeaDragon.Point(len,0);
+    // convert
+    return this.viewer.viewport.viewerElementToImageCoordinates(pt).x;
   }
 
   // probably want to return proxy?
