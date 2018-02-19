@@ -1,120 +1,136 @@
-class CalibratedCanvas{
-  constructor(canvas, viewer){
-    this.base = base;
-    this.viewer = viewer;
-  }
-  // method for coordinate conversion
-  // do all of the other methods for canvas
-  // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
+function CalibratedCanvas(base, viewer) {
+    // translation methods
+    function convertPoint(x, y) {
+        var pt = new OpenSeadragon.Point(x, y);
+        return viewer.viewport.viewerElementToImageCoordinates(pt);
+    }
 
-  proxy(){
+    function convertLen(len) {
+        var pt = new OpenSeadragon.Point(len, 0);
+        return viewer.viewport.viewerElementToImageCoordinates(pt).x;
+    }
+
     var handler = {
-      get(obj, prop, val){
-        // which points need to be converted?
-        // 1 and 2 are points, 3 and 4 are len (or not present)
-        var _pt2_len2 = ["clearRect", "fillRect", "strokeRect", "moveTo", "lineTo", "rect", "translate", "ellipse"];
-        // all args are sets of points
-        var _allpoints["createLinearGradient", "createRadialGradient", "bezierCurveTo", "quadraticCurveTo"]
-        // transformation matrix
-        var _tramat = ["transform", "setTransform"]
-        // text x y
-        var _txt = ["fillText", "strokeText"]
-        if (_pt2_len2.indexOf(prop) >=0){
-          return function (...args){
-            obj.[prop](...args);
-          }
+        get(obj, prop, val) {
+            // which points need to be converted for which method
+            // 1 and 2 are points, 3 and 4 are len (or not present)
+            var _pt2_len2 = ["clearRect", "fillRect", "strokeRect", "moveTo", "lineTo", "rect", "translate", "ellipse"];
+            // all args are sets of points
+            var _allpoints = ["createLinearGradient", "createRadialGradient", "bezierCurveTo", "quadraticCurveTo", "drawImage", "getImageData"]
+            // transformation matrix
+            var _tramat = ["transform", "setTransform"]
+            // text x y
+            var _txt = ["fillText", "strokeText"]
+            if (_pt2_len2.indexOf(prop) >= 0) {
+                return function(...args) {
+                    if (args.length >= 2) {
+                        var pt = convertPoint(args[0], args[1])
+                        args[0] = pt.x;
+                        args[1] = pt.y;
+                    }
+                    if (args.length >= 3) {
+                        args[2] = convertLen(args[2])
+                    }
+                    if (args.length >= 4) {
+                        args[3] = convertLen(args[3])
+                    }
+                    obj[prop](...args);
+                }
+            } else if (_allpoints.indexOf(prop) >= 0) {
+                return function(...args) {
+                    // for each set of two, convert
+                    for (var i = 0; i < Math.floor(args.length / 2); i++) {
+                        var pt = convertPoint(args[2 * i], args[2 * i + 1])
+                        args[2 * i] = pt.x;
+                        args[2 * i + 1] = pt.y;
+                    }
+                    obj[prop](...args);
+                }
+            } else if (_tramat.indexOf(prop) >= 0) {
+                return function(...args) {
+                    if (args.length >= 6) {
+                        var pt = convertPoint(args[4], args[5])
+                        args[4] = pt.x;
+                        args[5] = pt.y;
+                    }
+                    obj[prop](...args);
+                }
+            } else if (_txt.indexOf(prop) >= 0) {
+                return function(...args) {
+                    if (args.length >= 3) {
+                        var pt = convertPoint(args[1], args[2])
+                        args[1] = pt.x;
+                        args[2] = pt.y;
+                    }
+                    if (args.length >= 4) {
+                        args[3] = convertLen(args[3]);
+                    }
+                    obj[prop](...args);
+                }
+            } else if (prop == "arc") {
+                return function(...args) {
+                    //x, y, radius
+                    if (args.length >= 2) {
+                        var pt = convertPoint(args[0], args[1])
+                        args[0] = pt.x;
+                        args[1] = pt.y;
+                    }
+                    if (args.length >= 3) {
+                        args[2] = convertLen(args[2]);
+                    }
+                    obj[prop](...args);
+                }
+            } else if (prop == "arcTo") {
+                return function(...args) {
+                    //x1, y1, x2, y2, radius
+                    if (args.length >= 2) {
+                        var pt = convertPoint(args[0], args[1])
+                        args[0] = pt.x;
+                        args[1] = pt.y;
+                    }
+                    if (args.length >= 4) {
+                        var pt = convertPoint(args[2], args[3])
+                        args[2] = pt.x;
+                        args[3] = pt.y;
+                    }
+                    if (args.length >= 5) {
+                        args[4] = convertLen(args[4]);
+                    }
+                    obj[prop](...args);
+                }
+            } else if (prop == "putImageData") {
+                //imagedata, dx, dy, dirtyX, dirtyY, dirtyWidth, dirtyHeight
+                return function(...args) {
+                    if (args.length >= 3) {
+                        var pt = convertPoint(args[1], args[2])
+                        args[1] = pt.x;
+                        args[2] = pt.y;
+                    }
+                    if (args.length >= 5) {
+                        var pt = convertPoint(args[3], args[4])
+                        args[3] = pt.x;
+                        args[4] = pt.y;
+                    }
+                    if (args.length >= 7) {
+                        var pt = convertPoint(args[5], args[6])
+                        args[5] = pt.x;
+                        args[6] = pt.y;
+                    }
+                    obj[prop](...args);
+                }
+            } else {
+                return function(...args) {
+                    obj[prop](...args);
+                }
+            }
+        },
+        set(obj, prop, val) {
+            var _lengthy = ["lineWidth"];
+            if (_lengthy.indexOf(prop) >= 0) {
+                val = convertLen(val);
+            }
+            obj[prop] = val;
         }
-        else if (_allpoints.indexOf(prop) >=0){
-          return function (...args){
-            obj.[prop](...args);
-          }
-        }
-        else if (_tramat.indexOf(prop) >=0){
-          return function (...args){
-            obj.[prop](...args);
-          }
-        }
-        else if (_txt.indexOf(prop) >=0){
-          return function (...args){
-            obj.[prop](...args);
-          }
-        }
-        else if (prop == "arc"){
-          return function (...args){
-            obj.[prop](...args);
-          }
-        }
-        else if (prop == "arcTo"){
-          return function (...args){
-            obj.[prop](...args);
-          }
-        }
-        else if (prop == "drawImage"){
-          return function (...args){
-            obj.[prop](...args);
-          }
-        }
-        else if (prop == "getImageData"){
-          return function (...args){
-            obj.[prop](...args);
-          }
-        }
-        else if (prop == "putImageData"){
-          return function (...args){
-            obj.[prop](...args);
-          }
-        }
-      },
-      set(obj, prop, val) {
-          var _lengthy = ["lineWidth"];
-          if (_lengthy.indexOf(prop) >=0){
-            // convert val
-          }
-          obj.[prop] = val;
-      }
     }
     return new Proxy(base, handler);
-  }
-
-  //clearRect(x, y, width, height)
-  //fillRect(x, y, width, height)
-  //strokeRect(x, y, width, height)
-  //fillText(text, x, y [, maxWidth])
-  //strokeText(text, x, y [, maxWidth])
-  lineWidth -- -- property, not method
-  //createLinearGradient(x0, y0, x1, y1)
-  //createRadialGradient(x0, y0, r0, x1, y1, r1)
-  //moveTo(x,y)
-  //lineTo(x,y)
-  //bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
-  //quadraticCurveTo(cpx, cpy, x, y)
-  //arc(x, y, radius, startAngle, endAngle [, anticlockwise])
-  //arcTo(x1, y1, x2, y2, radius)
-  //ellipse(x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise)
-  //rect(x, y, width, height)
-  //translate(x,y)
-  //transform(a,b,c,d,e,f) // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/transform
-  //setTransform(a, b, c, d, e, f)
-  //drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
-  //getImageData(sx, sy, sw, sh)
-  //putImageData(imagedata, dx, dy, dirtyX, dirtyY, dirtyWidth, dirtyHeight)
-  // just forward other methods
-
-  // for each image, we want the screen position on the overlay
-  // pixel to image coords
-
-  // translation methods;
-  static convertPoint(point){
-    var pt = new OpenSeaDragon.Point(point.x,point.y);
-    // convert
-    return this.viewer.viewport.viewerElementToImageCoordinates(pt);
-  }
-
-  static convertLen(len){
-    var pt = new OpenSeaDragon.Point(len,0);
-    // convert
-    return this.viewer.viewport.viewerElementToImageCoordinates(pt).x;
-  }
-
-  // probably want to return proxy?
 }
