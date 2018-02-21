@@ -26,13 +26,10 @@
 <body>
     <div id="head">
         <p>Drawing on Bidirectional Coordination of viewing. Some events, like dragging the canvas, only work on completion.</p>
-        <p>Start drawing, draw something, then stop drawing to have it apply to both canvases. Moving images (should) be disabled while drawing.</p>
+        <p>Click the below "Start Drawing" button to start drawing using a pencil tool. On releasing the mouse, the drawing stops and the images update.</p>
         <span><input type="button" value="Start Drawing" id="draw_start"></input><span>
         <div id="drawing_tools" class="hidden">
-          <span><input type="button" value="Stop Drawing" id="draw_stop"></input><span>
-          <span><input type="button" value="Rectangle" id="rect_d"></input><span>
-          <span><input type="button" value="PolyLine" id="polyline_d"></input><span>
-          <span><input type="button" value="Pencil" id="pencil_d"></input><span>
+          <span><input type="button" value="Cancel Drawing" id="draw_stop"></input><span>
         </div>
     </div>
     <div id="about"></div>
@@ -92,40 +89,48 @@
         // set up annotools
         var at = new annotools({canvas:"first", iid:"iidhere", viewer:viewer1, mpp:1, context_list: contexts});
         // any conversion required between screen coords and viewport coords
+        var DRAWING = false;
         document.getElementById("draw_start").onclick = function(){
           document.getElementById("draw_start").classList.add("hidden");
           document.getElementById("draw_stop").classList.remove("hidden");
           document.getElementById("drawing_tools").classList.remove("hidden");
           document.getElementsByTagName("canvas")[4].parentElement.classList.remove("hidden");
-          document.getElementById("secondhider").classList.remove("hidden")
-        }
-        document.getElementById("draw_stop").onclick = function(){
-          document.getElementById("draw_start").classList.remove("hidden");
-          document.getElementById("draw_stop").classList.add("hidden");
-          document.getElementById("drawing_tools").classList.add("hidden");
-          document.getElementsByTagName("canvas")[5].parentElement.classList.add("hidden");
-          document.getElementById("secondhider").classList.add("hidden");
-          // nudge canvas to trigger canvas draw
-          viewer1.viewport.panBy(new OpenSeadragon.Point(0.0001,0.0001), true);
-          viewer2.viewport.panBy(new OpenSeadragon.Point(0.0001,0.0001), true);
-        }
-        document.getElementById("rect_d").onclick = function(){
-          at.mode="rect"
-          at.drawMarkups();
-        }
-        document.getElementById("pencil_d").onclick = function(){
+          document.getElementById("secondhider").classList.remove("hidden");
           at.mode="pencil"
           at.drawMarkups();
+          DRAWING = true;
         }
-        document.getElementById("polyline_d").onclick = function(){
-          at.mode="polyline"
-          at.drawMarkups();
+        at.drawCanvas.addEventListener('mouseup', function(){
+          console.log("triggered")
+          if (DRAWING){
+            document.getElementById("draw_start").classList.remove("hidden");
+            document.getElementById("draw_stop").classList.add("hidden");
+            document.getElementById("drawing_tools").classList.add("hidden");
+            document.getElementsByTagName("canvas")[5].parentElement.classList.add("hidden");
+            document.getElementById("secondhider").classList.add("hidden");
+            // nudge canvas to trigger canvas draw
+            viewer1.viewport.panBy(new OpenSeadragon.Point(0.0001,0.0001), true);
+            viewer2.viewport.panBy(new OpenSeadragon.Point(0.0001,0.0001), true);
+            DRAWING = false;
+          }
+        });
+        document.getElementById("draw_stop").onclick = function(){
+          if (DRAWING){
+            document.getElementById("draw_start").classList.remove("hidden");
+            document.getElementById("draw_stop").classList.add("hidden");
+            document.getElementById("drawing_tools").classList.add("hidden");
+            document.getElementsByTagName("canvas")[5].parentElement.classList.add("hidden");
+            document.getElementById("secondhider").classList.add("hidden");
+            // nudge canvas to trigger canvas draw
+            viewer1.viewport.panBy(new OpenSeadragon.Point(0.0001,0.0001), true);
+            viewer2.viewport.panBy(new OpenSeadragon.Point(0.0001,0.0001), true);
+            DRAWING = false;
+          }
         }
         var overlay1 = viewer1.canvasOverlay({
             clearBeforeRedraw:true,
             onRedraw:function() {
               var lw = 50 / (viewer1.viewport.getZoom(true));
-              console.log(lw);
               overlay1.context2d().lineWidth = lw
               c1.__apply_all(overlay1.context2d());
         }
@@ -134,7 +139,6 @@
             clearBeforeRedraw:true,
             onRedraw:function() {
               var lw = 50 / (viewer2.viewport.getZoom(true));
-              console.log(lw);
               overlay2.context2d().lineWidth = lw
               c2.__apply_all(overlay2.context2d());
           }
