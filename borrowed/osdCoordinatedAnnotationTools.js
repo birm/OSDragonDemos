@@ -398,7 +398,7 @@ annotools.prototype.drawMarkups = function () // Draw Markups
     })
     // The canvas context
     var ctx_base = [this.drawCanvas.getContext('2d')].append(this.context_list);
-    console.log(this.context_list)
+    console.log(this.context_list);
     var ctx = cloner(ctx_base);
     // Draw Markups on Canvas
     switch (this.mode) {
@@ -1394,7 +1394,7 @@ annotools.prototype.drawEllipse = function (ctx) {
     loc[0] = parseFloat(newAnnot.x)
     loc[1] = parseFloat(newAnnot.y)
     newAnnot.loc = loc
-    this.promptForAnnotation(newAnnot, 'new', this, ctx)
+    //this.promptForAnnotation(newAnnot, 'new', this, ctx)
   }.bind(this))
 }
 
@@ -1465,7 +1465,7 @@ annotools.prototype.drawRectangle = function (ctx) {
     // convert to geojson
     var geoNewAnnot = this.convertRectToGeo(newAnnot)
     // geoNewAnnot = newAnnot
-    this.promptForAnnotation(geoNewAnnot, 'new', this, ctx)
+    //this.promptForAnnotation(geoNewAnnot, 'new', this, ctx)
   }.bind(this))
 }
 
@@ -1555,7 +1555,7 @@ annotools.prototype.drawPencil = function (ctx) {
     //console.log(newAnnot)
     var geojsonAnnot = this.convertPencilToGeo(newAnnot)
 
-    this.promptForAnnotation(geojsonAnnot, 'new', this, ctx)
+    //this.promptForAnnotation(geojsonAnnot, 'new', this, ctx)
   }.bind(this))
 }
 
@@ -1636,7 +1636,7 @@ annotools.prototype.drawMeasure = function (ctx) {
       loc[0] = parseFloat(newAnnot.x)
       loc[1] = parseFloat(newAnnot.y)
       newAnnot.loc = loc
-      this.promptForAnnotation(newAnnot, 'new', this, ctx)
+      //this.promptForAnnotation(newAnnot, 'new', this, ctx)
       started = false
     }
   }.bind(this))
@@ -1744,7 +1744,7 @@ annotools.prototype.drawPolyline = function (ctx) {
     loc[0] = newAnnot.x
     loc[1] = newAnnot.y
     newAnnot.loc = loc
-    this.promptForAnnotation(newAnnot, 'new', this, ctx)
+    //this.promptForAnnotation(newAnnot, 'new', this, ctx)
   }.bind(this))
 }
 annotools.prototype.saveState = function () {
