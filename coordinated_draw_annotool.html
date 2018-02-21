@@ -31,6 +31,8 @@
         <div id="drawing_tools" class="hidden">
           <span><input type="button" value="Stop Drawing" id="draw_stop"></input><span>
           <span><input type="button" value="Rectangle" id="rect_d"></input><span>
+          <span><input type="button" value="PolyLine" id="polyline_d"></input><span>
+          <span><input type="button" value="Pencil" id="pencil_d"></input><span>
         </div>
     </div>
     <div id="about"></div>
@@ -110,17 +112,30 @@
         document.getElementById("rect_d").onclick = function(){
           at.mode="rect"
           at.drawMarkups();
-          // needs to stop both motion
+        }
+        document.getElementById("pencil_d").onclick = function(){
+          at.mode="pencil"
+          at.drawMarkups();
+        }
+        document.getElementById("polyline_d").onclick = function(){
+          at.mode="polyline"
+          at.drawMarkups();
         }
         var overlay1 = viewer1.canvasOverlay({
             clearBeforeRedraw:true,
             onRedraw:function() {
-            c2.__apply_all(overlay1.context2d());
+              var lw = 50 / (viewer1.viewport.getZoom(true));
+              console.log(lw);
+              overlay1.context2d().lineWidth = lw
+              c1.__apply_all(overlay1.context2d());
         }
         });
         var overlay2 = viewer2.canvasOverlay({
             clearBeforeRedraw:true,
             onRedraw:function() {
+              var lw = 50 / (viewer2.viewport.getZoom(true));
+              console.log(lw);
+              overlay2.context2d().lineWidth = lw
               c2.__apply_all(overlay2.context2d());
           }
         });
