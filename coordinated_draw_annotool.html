@@ -1,0 +1,148 @@
+<html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.3.0/openseadragon.min.js"></script>
+    <script src="borrowed/openseadragon-canvas-overlay.js"></script>
+    <script src="borrowed/osd_helper.min.js"></script>
+    <script src="borrowed/MooTools-Core-1.6.0.js"></script>
+    <script
+			  src="http://code.jquery.com/jquery-3.3.1.min.js"
+			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			  crossorigin="anonymous"></script>
+    <style>
+    .hidden{
+      display:none;
+    }
+    #first{
+      border-style: solid;
+    }
+    #second{
+      border-style: solid;
+    }
+    </style>
+
+</head>
+
+<body>
+    <div id="head">
+        <p>Drawing on Bidirectional Coordination of viewing. Some events, like dragging the canvas, only work on completion.</p>
+        <p>Start drawing, draw something, then stop drawing to have it apply to both canvases. Moving images (should) be disabled while drawing.</p>
+        <span><input type="button" value="Start Drawing" id="draw_start"></input><span>
+        <div id="drawing_tools" class="hidden">
+          <span><input type="button" value="Stop Drawing" id="draw_stop"></input><span>
+          <span><input type="button" value="Rectangle" id="rect_d"></input><span>
+          <span><input type="button" value="PolyLine" id="polyline_d"></input><span>
+          <span><input type="button" value="Pencil" id="pencil_d"></input><span>
+        </div>
+    </div>
+    <div id="about"></div>
+    <div id="windows">
+        <table width="100%">
+            <tr height="100%">
+                <td width="50%" height="100%">
+                    <div id="first" class="first" style="position:relative;width:100%;height:700px;">
+                    </div>
+                </td>
+                <td width="50%">
+                  <div class="hidden" id="secondhider" style="position: absolute; z-index: 2; left: 50%; top: 0px; width: 50%; height: 100%;" class=""><canvas width="739" height="700"></canvas><div></div></div>
+                  <div id="second" style="position:relative;width:100%;height:700px;">
+                  </div>
+                </td>
+    </div>
+    <div id="calibration" class="hidden">
+      <span>Calibration</span>
+      H:<input id="del_x" type="range" min="-100" max="100" value="0">
+      V:<input id="del_y" type="range" min="-100" max="100" value="0">
+    </div>
+    <script src="two_init.js"></script>
+    <script src="packages/coordinatedView.js"></script>
+    <script src="packages/ProxyTools.js"></script>
+    <script src="packages/CalibratedCanvas.js"></script>
+    <script src="borrowed/osdCoordinatedAnnotationTools.js"></script>
+    <script src="borrowed/geoJSONHandler.js"></script>
+    <script>
+        // make divs fill screen, mostly
+        document.getElementById("first").style.height = (window.innerHeight - 100) * 0.9
+        document.getElementById("second").style.height = (window.innerHeight - 100) * 0.9
+        window.onresize = function(){
+          document.getElementById("first").style.height = (window.innerHeight - 100) * 0.9
+          document.getElementById("second").style.height = (window.innerHeight - 100) * 0.9
+        }
+        // prereqs
+        Element.prototype.show = function(){
+          this.classList.remove("hidden")
+        }
+        Element.prototype.hide = function(){
+          this.classList.add("hidden")
+        }
+        viewer = viewer1;
+        viewer1.imagingHelper = new OpenSeadragonImaging.ImagingHelper({viewer: viewer1});
+        window.setTimeout(coordinatedView(viewer1, viewer2, 0, 0), 500);
+        // set up our overlays
+        var c1 = delayer({});
+        var c2 = delayer({});
+        var c1_c = CalibratedCanvas(c1, viewer1);
+        var c2_c = CalibratedCanvas(c2, viewer2);
+        // demo
+        c1.fillStyle = "red";
+        c1.fillRect(0, 0, 500, 500);
+        c2.fillStyle = "red";
+        c2.fillRect(0, 0, 500, 500);
+        var contexts = [c1_c, c2_c];
+        // set up annotools
+        var at = new annotools({canvas:"first", iid:"iidhere", viewer:viewer1, mpp:1, context_list: contexts});
+        // any conversion required between screen coords and viewport coords
+        document.getElementById("draw_start").onclick = function(){
+          document.getElementById("draw_start").classList.add("hidden");
+          document.getElementById("draw_stop").classList.remove("hidden");
+          document.getElementById("drawing_tools").classList.remove("hidden");
+          document.getElementsByTagName("canvas")[4].parentElement.classList.remove("hidden");
+          document.getElementById("secondhider").classList.remove("hidden")
+        }
+        document.getElementById("draw_stop").onclick = function(){
+          document.getElementById("draw_start").classList.remove("hidden");
+          document.getElementById("draw_stop").classList.add("hidden");
+          document.getElementById("drawing_tools").classList.add("hidden");
+          document.getElementsByTagName("canvas")[5].parentElement.classList.add("hidden");
+          document.getElementById("secondhider").classList.add("hidden");
+          // nudge canvas to trigger canvas draw
+          viewer1.viewport.panBy(new OpenSeadragon.Point(0.0001,0.0001), true);
+          viewer2.viewport.panBy(new OpenSeadragon.Point(0.0001,0.0001), true);
+        }
+        document.getElementById("rect_d").onclick = function(){
+          at.mode="rect"
+          at.drawMarkups();
+        }
+        document.getElementById("pencil_d").onclick = function(){
+          at.mode="pencil"
+          at.drawMarkups();
+        }
+        document.getElementById("polyline_d").onclick = function(){
+          at.mode="polyline"
+          at.drawMarkups();
+        }
+        var overlay1 = viewer1.canvasOverlay({
+            clearBeforeRedraw:true,
+            onRedraw:function() {
+              var lw = 50 / (viewer1.viewport.getZoom(true));
+              console.log(lw);
+              overlay1.context2d().lineWidth = lw
+              c1.__apply_all(overlay1.context2d());
+        }
+        });
+        var overlay2 = viewer2.canvasOverlay({
+            clearBeforeRedraw:true,
+            onRedraw:function() {
+              var lw = 50 / (viewer2.viewport.getZoom(true));
+              console.log(lw);
+              overlay2.context2d().lineWidth = lw
+              c2.__apply_all(overlay2.context2d());
+          }
+        });
+        //viewer1.addHandler("animation" , (x)=>  c1.__apply_all(overlay1.context2d()));
+        //viewer2.addHandler("animation" , (x)=> c2.__apply_all(overlay2.context2d()));
+
+    </script>
+</body>
+
+</html>
