@@ -28,8 +28,6 @@ function CalibratedCanvas(base, viewer) {
             var _txt = ["fillText", "strokeText"]
             if (_pt2_len2.indexOf(prop) >= 0) {
                 return function(...args) {
-                    console.log("before");
-                    console.log(args);
                     if (args.length >= 2) {
                         var pt = convertPoint(args[0], args[1])
                         args[0] = pt.x;
@@ -40,8 +38,6 @@ function CalibratedCanvas(base, viewer) {
                         args[2] = pt.x;
                         args[3] = pt.y;
                     }
-                    console.log("after")
-                    console.log(args);
                     obj[prop](...args);
                 }
             } else if (_allpoints.indexOf(prop) >= 0) {
