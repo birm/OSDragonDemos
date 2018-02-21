@@ -9,7 +9,11 @@ function delayer(base){
         new_base[instruction[1]] = instruction[2];
       }
       else if (instruction[0]==="fcn"){
-        new_base[instruction[1]](...instruction[2]);
+        var nb_fcn = new_base[instruction[1]];
+        if (typeof nb_dcn === "function"){
+          nb_fcn(...instruction[2]);
+        }
+
       }
     })
   }
