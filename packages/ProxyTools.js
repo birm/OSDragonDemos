@@ -9,9 +9,8 @@ function delayer(base){
         new_base[instruction[1]] = instruction[2];
       }
       else if (instruction[0]==="fcn"){
-        var nb_fcn = new_base[instruction[1]];
-        if (typeof nb_fcn === "function"){
-          nb_fcn.apply(null, instruction[2]);
+        if (typeof new_base[instruction[1]] === "function"){
+          new_base[instruction[1]](...instruction[2]);
         }
       }
     })
