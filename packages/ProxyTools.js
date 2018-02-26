@@ -11,7 +11,7 @@ function delayer(base){
       else if (instruction[0]==="fcn"){
         var nb_fcn = new_base[instruction[1]];
         if (typeof nb_fcn === "function"){
-          nb_fcn(...instruction[2]);
+          nb_fcn.apply(null, instruction[2]);
         }
       }
     })
