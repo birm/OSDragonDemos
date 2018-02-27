@@ -1,0 +1,115 @@
+<html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.3.0/openseadragon.min.js"></script>
+    <script src="borrowed/openseadragon-canvas-overlay.js"></script>
+    <script src="borrowed/osd_helper.min.js"></script>
+    <script src="borrowed/MooTools-Core-1.6.0.js"></script>
+    <script
+			  src="http://code.jquery.com/jquery-3.3.1.min.js"
+			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			  crossorigin="anonymous"></script>
+    <style>
+    .hidden{
+      display:none;
+    }
+    #first{
+      border-style: solid;
+    }
+    #second{
+      border-style: solid;
+    }
+    </style>
+
+</head>
+
+<body>
+    <div id="head">
+        <p>Drawing on Bidirectional Coordination of viewing. Some events, like dragging the canvas, only work on completion.</p>
+        <p>Click the below "Start Drawing" button to start drawing using a pencil tool. On releasing the mouse, the drawing stops and the images update.</p>
+        <span><input type="button" value="Start Drawing" id="draw_start"></input><span>
+        <div id="drawing_tools" class="hidden">
+          <span><input type="button" value="Cancel Drawing" id="draw_stop"></input><span>
+        </div>
+    </div>
+    <div id="about"></div>
+    <div id="windows">
+        <table width="100%">
+            <tr height="100%">
+                <td width="50%" height="100%">
+                    <div id="first" class="first" style="position:relative;width:100%;height:700px;">
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script src="archive/one_init.js"></script>
+    <script src="packages/ProxyTools.js"></script>
+    <script src="packages/OSDCanvas.js"></script>
+    <script src="borrowed/osdCoordinatedAnnotationTools.js"></script>
+    <script src="borrowed/geoJSONHandler.js"></script>
+    <script>
+        // make divs fill screen, mostly
+        document.getElementById("first").style.height = (window.innerHeight - 100) * 0.9
+        window.onresize = function(){
+          document.getElementById("first").style.height = (window.innerHeight - 100) * 0.9
+        }
+        // prereqs
+        Element.prototype.show = function(){
+          this.classList.remove("hidden")
+        }
+        Element.prototype.hide = function(){
+          this.classList.add("hidden")
+        }
+        viewer1 = viewer;
+        viewer1.imagingHelper = new OpenSeadragonImaging.ImagingHelper({viewer: viewer1});
+        // set up our overlays
+        var c1 = OSDCanvas({}, viewer);
+        // demo
+        c1.fillStyle = "red";
+        c1.fillRect(0, 0, 500, 500);
+        var contexts = [c1];
+        // set up annotools
+        var at = new annotools({canvas:"first", iid:"iidhere", viewer:viewer1, mpp:1, context_list: contexts});
+        // any conversion required between screen coords and viewport coords
+        var DRAWING = false;
+        document.getElementById("draw_start").onclick = function(){
+          document.getElementById("draw_start").classList.add("hidden");
+          document.getElementById("draw_stop").classList.remove("hidden");
+          document.getElementById("drawing_tools").classList.remove("hidden");
+          document.getElementsByTagName("canvas")[document.getElementsByTagName("canvas").length-1].parentElement.classList.remove("hidden");
+          at.mode="pencil"
+          at.drawMarkups();
+          DRAWING = true;
+        }
+        at.drawCanvas.addEventListener('mouseup', function(){
+          if (DRAWING){
+            document.getElementById("draw_start").classList.remove("hidden");
+            document.getElementById("draw_stop").classList.add("hidden");
+            document.getElementById("drawing_tools").classList.add("hidden");
+            document.getElementsByTagName("canvas")[document.getElementsByTagName("canvas").length-1].parentElement.classList.add("hidden");
+            // nudge canvas to trigger canvas draw
+            viewer1.viewport.panBy(new OpenSeadragon.Point(0.0001,0.0001), true);
+            DRAWING = false;
+          }
+        });
+        document.getElementById("draw_stop").onclick = function(){
+          if (DRAWING){
+            document.getElementById("draw_start").classList.remove("hidden");
+            document.getElementById("draw_stop").classList.add("hidden");
+            document.getElementById("drawing_tools").classList.add("hidden");
+            document.getElementsByTagName("canvas")[document.getElementsByTagName("canvas").length-1].parentElement.classList.add("hidden");
+            // nudge canvas to trigger canvas draw
+            viewer1.viewport.panBy(new OpenSeadragon.Point(0.0001,0.0001), true);
+            DRAWING = false;
+          }
+        }
+        viewer1.addHandler("update-viewport" , function(){
+            c1.__apply_all(viewer.drawer.context)}
+        );
+
+
+    </script>
+</body>
+
+</html>
