@@ -68,8 +68,6 @@
         // demo
         c1.fillStyle = "red";
         c1.fillRect(0, 0, 500, 500);
-        c2.fillStyle = "red";
-        c2.fillRect(0, 0, 500, 500);
         var contexts = [c1];
         // set up annotools
         var at = new annotools({canvas:"first", iid:"iidhere", viewer:viewer1, mpp:1, context_list: contexts});
@@ -106,7 +104,9 @@
             DRAWING = false;
           }
         }
-        viewer1.addHandler("animation" , (x)=>  c1.__apply_all(viewer.drawer.context));
+        viewer1.addHandler("update-viewport" , function(){
+            c1.__apply_all(viewer.drawer.context)}
+        );
 
 
     </script>

@@ -131,18 +131,25 @@ function OSDCanvas(base, viewer){
           // this is a set property
           args = convertLen(val,0).x;
       }
+      console.log(args)
+      console.log(draw)
       return args
+
   }
   // add our delay functions/objects to base
   base.__queue = [];
   base.__apply_all = function(new_base){
     base.__queue.forEach(function(instruction){
       if (instruction[0]==="set"){
-        new_base[instruction[1]] = _canvas_convert(instruction[1], instruction[2], true);
+          var oldargs = instruction[2].slice();
+          var newargs = _canvas_convert(instruction[1], oldargs, true);
+        new_base[instruction[1]] = newargs
       }
       else if (instruction[0]==="fcn"){
         if (typeof new_base[instruction[1]] === "function"){
-          new_base[instruction[1]](..._canvas_convert(instruction[1], instruction[2], true));
+          var oldargs = instruction[2].slice();
+          var newargs = _canvas_convert(instruction[1], oldargs, true);
+          new_base[instruction[1]](...newargs);
         }
       }
     })
