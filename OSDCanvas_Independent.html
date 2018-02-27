@@ -25,7 +25,7 @@
 
 <body>
     <div id="head">
-        <p>Simple Canvas to OpenSeadragon Conversion (and drawing) demo</p>
+        <p>Independent (but poor performance) OpenSeadragon canvas demo.</p>
         <p>Click the below "Start Drawing" button to start drawing using a pencil tool. On releasing the mouse, the drawing stops and the images update.</p>
         <span><input type="button" value="Start Drawing" id="draw_start"></input><span>
         <div id="drawing_tools" class="hidden">
@@ -49,30 +49,28 @@
     <script src="borrowed/osdCoordinatedAnnotationTools.js"></script>
     <script src="borrowed/geoJSONHandler.js"></script>
     <script>
-        // hacky fill screen
+        // make divs fill screen, mostly
         document.getElementById("first").style.height = (window.innerHeight - 100) * 0.9
         window.onresize = function(){
           document.getElementById("first").style.height = (window.innerHeight - 100) * 0.9
         }
-        // prereqs for annotools
+        // prereqs
         Element.prototype.show = function(){
           this.classList.remove("hidden")
         }
         Element.prototype.hide = function(){
           this.classList.add("hidden")
         }
-        viewer.imagingHelper = new OpenSeadragonImaging.ImagingHelper({viewer: viewer});
-
-
-        // Keep track of canvas interactions, converting from pixel coordinates to image coordinates
+        viewer1 = viewer;
+        viewer1.imagingHelper = new OpenSeadragonImaging.ImagingHelper({viewer: viewer1});
+        // set up our overlays
         var c1 = OSDCanvas({}, viewer);
-
-
-
-        // This section deals with switching on and off the annotools drawing mode
+        // demo
+        c1.fillStyle = "red";
+        c1.fillRect(0, 0, 500, 500);
         var contexts = [c1];
         // set up annotools
-        var at = new annotools({canvas:"first", iid:"iidhere", viewer:viewer, mpp:1, context_list: contexts});
+        var at = new annotools({canvas:"first", iid:"iidhere", viewer:viewer1, mpp:1, context_list: contexts});
         // any conversion required between screen coords and viewport coords
         var DRAWING = false;
         document.getElementById("draw_start").onclick = function(){
@@ -91,7 +89,7 @@
             document.getElementById("drawing_tools").classList.add("hidden");
             document.getElementsByTagName("canvas")[document.getElementsByTagName("canvas").length-1].parentElement.classList.add("hidden");
             // nudge canvas to trigger canvas draw
-            viewer.viewport.panBy(new OpenSeadragon.Point(0.0001,0.0001), true);
+            viewer1.viewport.panBy(new OpenSeadragon.Point(0.0001,0.0001), true);
             DRAWING = false;
           }
         });
@@ -102,20 +100,13 @@
             document.getElementById("drawing_tools").classList.add("hidden");
             document.getElementsByTagName("canvas")[document.getElementsByTagName("canvas").length-1].parentElement.classList.add("hidden");
             // nudge canvas to trigger canvas draw
-            viewer.viewport.panBy(new OpenSeadragon.Point(0.0001,0.0001), true);
+            viewer1.viewport.panBy(new OpenSeadragon.Point(0.0001,0.0001), true);
             DRAWING = false;
           }
         }
-        var overlay = viewer.canvasOverlay({
-            clearBeforeRedraw:true,
-            onRedraw:function() {
-              var lw = 50 / (viewer.viewport.getZoom(true));
-              // scale width to zoom as not to overwhelm
-              overlay.context2d().lineWidth = lw;
-              // apply every canvas interaction each redraw
-              c1.__apply_all(overlay.context2d());
-        }
-        });
+        viewer1.addHandler("update-viewport" , function(){
+            c1.__apply_all(viewer.drawer.context)}
+        );
 
 
     </script>
